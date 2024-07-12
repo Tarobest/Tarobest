@@ -104,7 +104,7 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{cjs.json}": [
+    "*.{cjs,json}": [
       "prettier --write"
     ]
   }
