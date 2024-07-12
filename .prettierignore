@@ -1,6 +1,7 @@
 node_modules
 dist
 public
+types
 .husky
 .vscode
 docs
@@ -9,3 +10,4 @@ docs
 .eslintrc
 .prettierrc
 commitlint.config.cjs
+index.html

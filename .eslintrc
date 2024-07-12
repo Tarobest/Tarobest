@@ -1,19 +1,27 @@
 {
-  "root": true,
-  "parser": "@typescript-eslint/parser",
-  "extends": [
-    "taro/react",
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "prettier"
-  ],
+ 
+  "extends": ["taro/react","plugin:prettier/recommended"],
+  "plugins": ["prettier"],
   "rules": {
+    "prefer-const":"warn",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
+    "quotes":"off",
+    "no-unused-vars":"off",
+    "array-bracket-spacing":["error","never"],
+    "no-var":"warn",
+    "block-spacing": ["warn", "never"],
+    "comma-spacing": [
+      "error",
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "no-cjs": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "no-commonjs": "off",
     "import/no-commonjs": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "prettier/prettier": "error"
-  },
-  "plugins": ["prettier"]
+    "@typescript-eslint/no-explicit-any": "off"
+  }
 }
