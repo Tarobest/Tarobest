@@ -4,5 +4,4 @@ dist/
 
 public/
 
-docs/
-
+*.config.cjs

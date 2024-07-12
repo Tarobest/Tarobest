@@ -1,16 +1,19 @@
 {
-  "root":true,
+  "root": true,
   "parser": "@typescript-eslint/parser",
   "extends": [
     "taro/react",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/eslint-recommended"
+    "plugin:@typescript-eslint/eslint-recommended",
+    "prettier"
   ],
   "rules": {
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
-    "import/no-commonjs": "off", 
-    "@typescript-eslint/no-explicit-any":"off"
-  }
+    "import/no-commonjs": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "prettier/prettier": "error"
+  },
+  "plugins": ["prettier"]
 }
