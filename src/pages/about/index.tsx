@@ -1,5 +1,6 @@
-import { View, Text } from "@tarojs/components";
+import { View } from "@tarojs/components";
 import { useLoad } from "@tarojs/taro";
+import ReactLogo from "../../component/ReactLogo/ReactLogo";
 import "./index.css";
 
 export default function Index() {
@@ -9,7 +10,8 @@ export default function Index() {
 
   return (
     <View className='index'>
-      <Text>Hello world!</Text>
+      <View className='box'>Tarobest+React</View>
+      <ReactLogo></ReactLogo>
     </View>
   );
 }

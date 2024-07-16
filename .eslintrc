@@ -10,7 +10,6 @@
     "no-unused-vars":"off",
     "array-bracket-spacing":["error","never"],
     "no-var":"warn",
-    "block-spacing": ["warn", "never"],
     "comma-spacing": [
       "error",
       {
