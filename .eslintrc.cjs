@@ -42,7 +42,10 @@ module.exports = {
 
     // 用于实现解决默认暴露的问题
     'import/prefer-default-export': 0,
+    // 直接关闭我们的多字
+    'vue/multi-word-component-names':0,
     // 用于实现那个自增自减的问题
+    "import/no-unresolved":0,
     'no-plusplus': 0,
 
     'import/order': [
