@@ -64,7 +64,7 @@
       "prettier --write",
       "git add"
     ],
-    "*.{vue}": [
+    "*.{vue, html}": [
       "eslint --fix",
       "prettier --write",
       "stylelint --fix --allow-empty-input",
