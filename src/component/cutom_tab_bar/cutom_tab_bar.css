@@ -1,0 +1,39 @@
+.custom_tab_bar {
+  display: flex;
+  width: 100%;
+  height: 150px;
+  justify-content: space-around;
+  background-color: aqua;
+  position: fixed;
+  bottom: 0;
+}
+.tab_icon {
+  height: 4vmax;
+  width: 8vmin;
+  margin-top: 2vmax;
+}
+.tab_text {
+  font-size: 4vmin;
+  display: block;
+  color: #66ddf7;
+  text-align: center;
+  margin-top: 2px;
+}
+.tab_textactive {
+  font-size: 4vmin;
+  display: block;
+  color: #011b20;
+  text-align: center;
+  margin-top: 2px;
+}
+.tab_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tab_itemactive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
