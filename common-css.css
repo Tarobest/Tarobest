@@ -1,0 +1,83 @@
+/* 定义基础字体大小 */
+html {
+  font-size: 100px;
+  /* 假设设计图的基础宽度为750px */
+}
+
+/* 设备宽度小于320px时的样式 */
+@media (max-width: 320px) {
+  html {
+    font-size: 62.5%;
+    /* 100px / 160px = 62.5% */
+  }
+}
+
+/* 设备宽度在320px到480px之间的样式 */
+@media (min-width: 321px) and (max-width: 480px) {
+  html {
+    font-size: 87.5%;
+    /* 120px / 160px = 87.5% */
+  }
+}
+
+/* 设备宽度在481px到640px之间的样式 */
+@media (min-width: 481px) and (max-width: 640px) {
+  html {
+    font-size: 112.5%;
+    /* 150px / 160px = 112.5% */
+  }
+}
+
+/* 设备宽度大于640px时的样式 */
+@media (min-width: 641px) {
+  html {
+    font-size: 125%;
+    /* 160px / 160px = 125% */
+  }
+}
+
+/* 其他通用的样式 */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 750px;
+  /* 设计图的最大宽度 */
+  margin: 0 auto;
+}
+
+/* 可以根据实际设计调整 */
+.header {
+  width: 100%;
+  height: 50px;
+  /* 假设头部高度 */
+  background: #f4f4f4;
+}
+
+.footer {
+  width: 100%;
+  height: 100px;
+  /* 假设底部高度 */
+  background: #333;
+  color: #fff;
+}
+
+/* 适配不同屏幕宽度的元素大小 */
+.rpx-10 {
+  width: 10rpx;
+}
+
+.rpx-20 {
+  width: 20rpx;
+}
+
+.rpx-40 {
+  width: 40rpx;
+}
+
+
+
+/* ...可以根据需要定义更多的rpx尺寸 */
