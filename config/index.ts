@@ -1,5 +1,6 @@
 import { defineConfig, type UserConfigExport } from "@tarojs/cli";
 import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
+import path from "path";
 import devConfig from "./dev";
 import prodConfig from "./prod";
 
@@ -88,6 +89,10 @@ export default defineConfig(async (merge, { command, mode }) => {
           enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
         },
       },
+    },
+    alias: {
+      "@": path.resolve(__dirname, "../src"),
+      "@/pages": path.resolve(__dirname, "../src/pages"),
     },
   };
   if (process.env.NODE_ENV === "development") {

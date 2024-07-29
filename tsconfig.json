@@ -18,9 +18,11 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "typeRoots": ["node_modules/@types"],
+    "baseUrl": ".",
     "paths": {
       // TS5090 leading './'
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@pages/*": ["./src/pages/*"]
     }
   },
   "include": ["./src", "./types", "./config"],
