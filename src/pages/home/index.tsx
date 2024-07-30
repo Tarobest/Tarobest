@@ -1,4 +1,4 @@
-import { View, Text, Image, Icon, Button } from "@tarojs/components";
+import { View, Text, Image, Icon } from "@tarojs/components";
 import { useState } from "react";
 import { useLoad } from "@tarojs/taro";
 import Mybutton from "../../component/Button/Button";
@@ -16,13 +16,14 @@ export default function Index() {
   });
 
   const handleClick2 = () => {
-    const { params, path } = TarobestRouter.getNowRouteinfo();
-    console.log("params:", params);
-    console.log("path:", path);
-    // TarobestRouter.navigateTo("/pages/test/index", {
-    //   id: 1,
-    //   msg: "imimm & omomo",
-    // });
+    // const { params, path } = TarobestRouter.getNowRouteinfo();
+    // console.log("params:", params);
+    // console.log("path:", path);
+    console.log("跳转");
+    TarobestRouter.navigateTo("/pages/test/index", {
+      id: 1,
+      msg: "imimm & omomo",
+    });
   };
 
   return (
@@ -43,7 +44,7 @@ export default function Index() {
         <Icon type='search'></Icon>
       </View>
       <Text>Icon 示例</Text>
-      <Mybutton handleClick={handleClick2}>打印当前路由信息</Mybutton>
+      <Mybutton handleClick={handleClick2}>跳转到test</Mybutton>
     </View>
   );
 }
