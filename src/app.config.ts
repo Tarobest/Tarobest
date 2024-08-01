@@ -1,6 +1,6 @@
 export default defineAppConfig({
   entryPagePath: "pages/home/index",
-  pages: ["pages/home/index", "pages/about/index"],
+  pages: ["pages/home/index", "pages/about/index", "pages/test/index"],
   window: {
     backgroundTextStyle: "dark",
     backgroundColor: "#808080",

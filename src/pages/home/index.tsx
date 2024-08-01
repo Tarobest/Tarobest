@@ -4,6 +4,7 @@ import { useLoad } from "@tarojs/taro";
 import Mybutton from "../../component/Button/Button";
 import { BubbleList } from "../../component/background/bubble";
 import "./index.css";
+import TarobestRouter from "../../utils/route/route";
 
 export default function Index() {
   const [count, setCount] = useState(0);
@@ -14,11 +15,22 @@ export default function Index() {
     console.log("Page loaded.");
   });
 
+  const handleClick2 = () => {
+    // const { params, path } = TarobestRouter.getNowRouteinfo();
+    // console.log("params:", params);
+    // console.log("path:", path);
+    console.log("跳转");
+    TarobestRouter.navigateTo("/pages/test/index", {
+      id: 1,
+      msg: "imimm & omomo",
+    });
+  };
+
   return (
     <View className='index'>
       <BubbleList></BubbleList>
       <View className='box'>Tarobest</View>
-      <Mybutton hansleClick={handleClick}>count:{count}</Mybutton>
+      <Mybutton handleClick={handleClick}>count:{count}</Mybutton>
       <Text>Button 示例</Text>
       <Image src='https://pic3.zhimg.com/v2-e52354ffdbd94a8e0a7649eacd34a788_r.jpg?source=1940ef5c'></Image>
       <Text>Image示例</Text>
@@ -31,7 +43,8 @@ export default function Index() {
         <Icon type='waiting'></Icon>
         <Icon type='search'></Icon>
       </View>
-      <Text>Icon示例</Text>
+      <Text>Icon 示例</Text>
+      <Mybutton handleClick={handleClick2}>跳转到test</Mybutton>
     </View>
   );
 }
