@@ -31146,13 +31146,13 @@ program
             message: '是否使用typescript?',
         },
     ];
-    const localPath = path$2.join(os.tmpdir(), 'taro-repo'); // 使用临时目录作为本地路径
-    // 确保 localPath 目录存在  
-    if (!require$$0$6.existsSync(localPath)) {
-        require$$0$6.mkdirSync(localPath, { recursive: true });
-    }
     inquirer.prompt(prompts).then((answers) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('用户选择:', answers);
+        const localPath = path$2.join(os.tmpdir(), 'taro-repo'); // 使用临时目录作为本地路径
+        // 确保 localPath 目录存在  
+        if (!require$$0$6.existsSync(localPath)) {
+            require$$0$6.mkdirSync(localPath, { recursive: true });
+        }
         // 定义 checkTemplateInfoMatches 函数以比较 package.json 中的 templateInfo
         const checkTemplateInfoMatches = (packagePath, answers) => {
             const packageJson = require(packagePath);
@@ -31165,7 +31165,7 @@ program
             // 克隆仓库，但不检出任何分支
             yield git.clone(TEMPLATE_SRC, localPath, ['--no-checkout']);
             // 获取所有分支名称
-            const branches = yield git.branch(['--remote', '--format=%(name)']);
+            const branches = yield git.branch(['--remote', '--format=%(refname:short)']);
             const branchNames = branches.all;
             // 遍历分支并检查 package.json
             for (const branch of branchNames) {
@@ -31189,7 +31189,7 @@ program
         }
         finally {
             // 清理临时仓库目录
-            yield git.clean();
+            yield git.clean('f');
             yield git.reset(['--hard']);
         }
     }));
