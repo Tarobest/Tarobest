@@ -1,34 +1,3 @@
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-
-}
-
-/* 头部、导航、区块、页脚的公共样式 */
-.header, .section, .footer {
-  padding: 20px;
-  border: 1px solid #ccc;
-  margin-bottom: 20px;
-}
-
-/* 小于600px时的样式 */
-@media (max-width: 600px) {
-  .header, .section, .footer {
-    text-align: center;
-  }
-}
-
-/* 屏幕宽度在601px到1000px之间的样式 */
-@media (min-width: 601px) and (max-width: 1000px) {
-  /* 微信小程序没有nav元素，如果有导航栏，需要自定义 */
-}
-
-/* 屏幕宽度大于1000px时的样式 */
-@media (min-width: 1001px) {
-  .section {
-    margin: 0 20px;
-  }
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
