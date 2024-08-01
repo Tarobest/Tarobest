@@ -3,7 +3,7 @@ import { useLoad } from "@tarojs/taro";
 import ReactLogo from "../../component/ReactLogo/ReactLogo";
 import TarobestRouter from "../../utils/route/route";
 import Mybutton from "../../component/Button/Button";
-import "./index.css";
+import "./index.scss";
 
 export default function Index() {
   useLoad(() => {
