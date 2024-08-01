@@ -4,20 +4,22 @@ var require$$0$2 = require('node:events');
 var require$$1$1 = require('node:child_process');
 var require$$2$1 = require('node:path');
 var require$$3$1 = require('node:fs');
-var process$4 = require('node:process');
+var process$5 = require('node:process');
 var readline$1 = require('node:readline');
 var require$$1$2 = require('stream');
 var require$$0$3 = require('node:tty');
 var node_async_hooks = require('node:async_hooks');
 var require$$0$4 = require('tty');
-var require$$0$6 = require('fs');
+var fs$3 = require('fs');
 var require$$0$5 = require('util');
 var require$$1$4 = require('child_process');
-var require$$0$7 = require('buffer');
+var require$$0$6 = require('buffer');
 var require$$1$3 = require('string_decoder');
 var path$2 = require('path');
 var require$$2$2 = require('crypto');
 var os = require('os');
+var require$$0$7 = require('assert');
+var require$$2$3 = require('events');
 
 function _interopNamespaceDefault(e) {
     var n = Object.create(null);
@@ -1345,7 +1347,7 @@ const EventEmitter = require$$0$2.EventEmitter;
 const childProcess = require$$1$1;
 const path$1 = require$$2$1;
 const fs$2 = require$$3$1;
-const process$3 = process$4;
+const process$4 = process$5;
 
 const { Argument: Argument$2, humanReadableArgName } = argument;
 const { CommanderError: CommanderError$2 } = error;
@@ -1401,12 +1403,12 @@ let Command$2 = class Command extends EventEmitter {
 
     // see .configureOutput() for docs
     this._outputConfiguration = {
-      writeOut: (str) => process$3.stdout.write(str),
-      writeErr: (str) => process$3.stderr.write(str),
+      writeOut: (str) => process$4.stdout.write(str),
+      writeErr: (str) => process$4.stderr.write(str),
       getOutHelpWidth: () =>
-        process$3.stdout.isTTY ? process$3.stdout.columns : undefined,
+        process$4.stdout.isTTY ? process$4.stdout.columns : undefined,
       getErrHelpWidth: () =>
-        process$3.stderr.isTTY ? process$3.stderr.columns : undefined,
+        process$4.stderr.isTTY ? process$4.stderr.columns : undefined,
       outputError: (str, write) => write(str),
     };
 
@@ -1850,7 +1852,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
       this._exitCallback(new CommanderError$2(exitCode, code, message));
       // Expecting this line is not reached.
     }
-    process$3.exit(exitCode);
+    process$4.exit(exitCode);
   }
 
   /**
@@ -2319,11 +2321,11 @@ Expecting one of '${allowedValues.join("', '")}'`);
 
     // auto-detect argument conventions if nothing supplied
     if (argv === undefined && parseOptions.from === undefined) {
-      if (process$3.versions?.electron) {
+      if (process$4.versions?.electron) {
         parseOptions.from = 'electron';
       }
       // check node specific options for scenarios where user CLI args follow executable without scriptname
-      const execArgv = process$3.execArgv ?? [];
+      const execArgv = process$4.execArgv ?? [];
       if (
         execArgv.includes('-e') ||
         execArgv.includes('--eval') ||
@@ -2336,7 +2338,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
 
     // default to using process.argv
     if (argv === undefined) {
-      argv = process$3.argv;
+      argv = process$4.argv;
     }
     this.rawArgs = argv.slice();
 
@@ -2350,7 +2352,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
         break;
       case 'electron':
         // @ts-ignore: because defaultApp is an unknown property
-        if (process$3.defaultApp) {
+        if (process$4.defaultApp) {
           this._scriptPath = argv[1];
           userArgs = argv.slice(2);
         } else {
@@ -2507,28 +2509,28 @@ Expecting one of '${allowedValues.join("', '")}'`);
     launchWithNode = sourceExt.includes(path$1.extname(executableFile));
 
     let proc;
-    if (process$3.platform !== 'win32') {
+    if (process$4.platform !== 'win32') {
       if (launchWithNode) {
         args.unshift(executableFile);
         // add executable arguments to spawn
-        args = incrementNodeInspectorPort(process$3.execArgv).concat(args);
+        args = incrementNodeInspectorPort(process$4.execArgv).concat(args);
 
-        proc = childProcess.spawn(process$3.argv[0], args, { stdio: 'inherit' });
+        proc = childProcess.spawn(process$4.argv[0], args, { stdio: 'inherit' });
       } else {
         proc = childProcess.spawn(executableFile, args, { stdio: 'inherit' });
       }
     } else {
       args.unshift(executableFile);
       // add executable arguments to spawn
-      args = incrementNodeInspectorPort(process$3.execArgv).concat(args);
-      proc = childProcess.spawn(process$3.execPath, args, { stdio: 'inherit' });
+      args = incrementNodeInspectorPort(process$4.execArgv).concat(args);
+      proc = childProcess.spawn(process$4.execPath, args, { stdio: 'inherit' });
     }
 
     if (!proc.killed) {
       // testing mainly to avoid leak warnings during unit tests with mocked spawn
       const signals = ['SIGUSR1', 'SIGUSR2', 'SIGTERM', 'SIGINT', 'SIGHUP'];
       signals.forEach((signal) => {
-        process$3.on(signal, () => {
+        process$4.on(signal, () => {
           if (proc.killed === false && proc.exitCode === null) {
             // @ts-ignore because signals not typed to known strings
             proc.kill(signal);
@@ -2542,7 +2544,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
     proc.on('close', (code) => {
       code = code ?? 1; // code is null if spawned process terminated due to a signal
       if (!exitCallback) {
-        process$3.exit(code);
+        process$4.exit(code);
       } else {
         exitCallback(
           new CommanderError$2(
@@ -2569,7 +2571,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
         throw new Error(`'${executableFile}' not executable`);
       }
       if (!exitCallback) {
-        process$3.exit(1);
+        process$4.exit(1);
       } else {
         const wrappedError = new CommanderError$2(
           1,
@@ -3180,7 +3182,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
    */
   _parseOptionsEnv() {
     this.options.forEach((option) => {
-      if (option.envVar && option.envVar in process$3.env) {
+      if (option.envVar && option.envVar in process$4.env) {
         const optionKey = option.attributeName();
         // Priority check. Do not overwrite cli or options from unknown source (client-code).
         if (
@@ -3192,7 +3194,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
           if (option.required || option.optional) {
             // option can take a value
             // keep very simple, optional always takes value
-            this.emit(`optionEnv:${option.name()}`, process$3.env[option.envVar]);
+            this.emit(`optionEnv:${option.name()}`, process$4.env[option.envVar]);
           } else {
             // boolean
             // keep very simple, only care that envVar defined and not the value
@@ -3733,7 +3735,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
 
   help(contextOptions) {
     this.outputHelp(contextOptions);
-    let exitCode = process$3.exitCode || 0;
+    let exitCode = process$4.exitCode || 0;
     if (
       exitCode === 0 &&
       contextOptions &&
@@ -5880,13 +5882,13 @@ Object.defineProperty(spinners, 'random', {
 
 var cliSpinners = spinners;
 
-var spinners$1 = /*@__PURE__*/getDefaultExportFromCjs(cliSpinners);
+var cliSpinners$1 = /*@__PURE__*/getDefaultExportFromCjs(cliSpinners);
 
 const defaultTheme = {
     prefix: colors$1.green('?'),
     spinner: {
-        interval: spinners$1.dots.interval,
-        frames: spinners$1.dots.frames.map((frame) => colors$1.yellow(frame)),
+        interval: cliSpinners$1.dots.interval,
+        frames: cliSpinners$1.dots.frames.map((frame) => colors$1.yellow(frame)),
     },
     style: {
         answer: colors$1.cyan,
@@ -6046,9 +6048,9 @@ function cliWidth(options) {
 
 var cliWidth$1 = /*@__PURE__*/getDefaultExportFromCjs(cliWidth_1);
 
-var stringWidth$2 = {exports: {}};
+var stringWidth$3 = {exports: {}};
 
-var ansiRegex$1 = ({onlyFirst = false} = {}) => {
+var ansiRegex$2 = ({onlyFirst = false} = {}) => {
 	const pattern = [
 		'[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
 		'(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))'
@@ -6057,11 +6059,11 @@ var ansiRegex$1 = ({onlyFirst = false} = {}) => {
 	return new RegExp(pattern, onlyFirst ? undefined : 'g');
 };
 
-const ansiRegex = ansiRegex$1;
+const ansiRegex$1 = ansiRegex$2;
 
-var stripAnsi$2 = string => typeof string === 'string' ? string.replace(ansiRegex(), '') : string;
+var stripAnsi$3 = string => typeof string === 'string' ? string.replace(ansiRegex$1(), '') : string;
 
-var stripAnsi$3 = /*@__PURE__*/getDefaultExportFromCjs(stripAnsi$2);
+var stripAnsi$4 = /*@__PURE__*/getDefaultExportFromCjs(stripAnsi$3);
 
 var isFullwidthCodePoint$2 = {exports: {}};
 
@@ -6117,27 +6119,27 @@ isFullwidthCodePoint$2.exports.default = isFullwidthCodePoint$1;
 
 var isFullwidthCodePointExports = isFullwidthCodePoint$2.exports;
 
-var emojiRegex$1 = function () {
+var emojiRegex$2 = function () {
   // https://mths.be/emoji
   return /\uD83C\uDFF4\uDB40\uDC67\uDB40\uDC62(?:\uDB40\uDC65\uDB40\uDC6E\uDB40\uDC67|\uDB40\uDC73\uDB40\uDC63\uDB40\uDC74|\uDB40\uDC77\uDB40\uDC6C\uDB40\uDC73)\uDB40\uDC7F|\uD83D\uDC68(?:\uD83C\uDFFC\u200D(?:\uD83E\uDD1D\u200D\uD83D\uDC68\uD83C\uDFFB|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C\uDFFF\u200D(?:\uD83E\uDD1D\u200D\uD83D\uDC68(?:\uD83C[\uDFFB-\uDFFE])|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C\uDFFE\u200D(?:\uD83E\uDD1D\u200D\uD83D\uDC68(?:\uD83C[\uDFFB-\uDFFD])|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C\uDFFD\u200D(?:\uD83E\uDD1D\u200D\uD83D\uDC68(?:\uD83C[\uDFFB\uDFFC])|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\u200D(?:\u2764\uFE0F\u200D(?:\uD83D\uDC8B\u200D)?\uD83D\uDC68|(?:\uD83D[\uDC68\uDC69])\u200D(?:\uD83D\uDC66\u200D\uD83D\uDC66|\uD83D\uDC67\u200D(?:\uD83D[\uDC66\uDC67]))|\uD83D\uDC66\u200D\uD83D\uDC66|\uD83D\uDC67\u200D(?:\uD83D[\uDC66\uDC67])|(?:\uD83D[\uDC68\uDC69])\u200D(?:\uD83D[\uDC66\uDC67])|[\u2695\u2696\u2708]\uFE0F|\uD83D[\uDC66\uDC67]|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|(?:\uD83C\uDFFB\u200D[\u2695\u2696\u2708]|\uD83C\uDFFF\u200D[\u2695\u2696\u2708]|\uD83C\uDFFE\u200D[\u2695\u2696\u2708]|\uD83C\uDFFD\u200D[\u2695\u2696\u2708]|\uD83C\uDFFC\u200D[\u2695\u2696\u2708])\uFE0F|\uD83C\uDFFB\u200D(?:\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C[\uDFFB-\uDFFF])|(?:\uD83E\uDDD1\uD83C\uDFFB\u200D\uD83E\uDD1D\u200D\uD83E\uDDD1|\uD83D\uDC69\uD83C\uDFFC\u200D\uD83E\uDD1D\u200D\uD83D\uDC69)\uD83C\uDFFB|\uD83E\uDDD1(?:\uD83C\uDFFF\u200D\uD83E\uDD1D\u200D\uD83E\uDDD1(?:\uD83C[\uDFFB-\uDFFF])|\u200D\uD83E\uDD1D\u200D\uD83E\uDDD1)|(?:\uD83E\uDDD1\uD83C\uDFFE\u200D\uD83E\uDD1D\u200D\uD83E\uDDD1|\uD83D\uDC69\uD83C\uDFFF\u200D\uD83E\uDD1D\u200D(?:\uD83D[\uDC68\uDC69]))(?:\uD83C[\uDFFB-\uDFFE])|(?:\uD83E\uDDD1\uD83C\uDFFC\u200D\uD83E\uDD1D\u200D\uD83E\uDDD1|\uD83D\uDC69\uD83C\uDFFD\u200D\uD83E\uDD1D\u200D\uD83D\uDC69)(?:\uD83C[\uDFFB\uDFFC])|\uD83D\uDC69(?:\uD83C\uDFFE\u200D(?:\uD83E\uDD1D\u200D\uD83D\uDC68(?:\uD83C[\uDFFB-\uDFFD\uDFFF])|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C\uDFFC\u200D(?:\uD83E\uDD1D\u200D\uD83D\uDC68(?:\uD83C[\uDFFB\uDFFD-\uDFFF])|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C\uDFFB\u200D(?:\uD83E\uDD1D\u200D\uD83D\uDC68(?:\uD83C[\uDFFC-\uDFFF])|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C\uDFFD\u200D(?:\uD83E\uDD1D\u200D\uD83D\uDC68(?:\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\u200D(?:\u2764\uFE0F\u200D(?:\uD83D\uDC8B\u200D(?:\uD83D[\uDC68\uDC69])|\uD83D[\uDC68\uDC69])|\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD])|\uD83C\uDFFF\u200D(?:\uD83C[\uDF3E\uDF73\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E[\uDDAF-\uDDB3\uDDBC\uDDBD]))|\uD83D\uDC69\u200D\uD83D\uDC69\u200D(?:\uD83D\uDC66\u200D\uD83D\uDC66|\uD83D\uDC67\u200D(?:\uD83D[\uDC66\uDC67]))|(?:\uD83E\uDDD1\uD83C\uDFFD\u200D\uD83E\uDD1D\u200D\uD83E\uDDD1|\uD83D\uDC69\uD83C\uDFFE\u200D\uD83E\uDD1D\u200D\uD83D\uDC69)(?:\uD83C[\uDFFB-\uDFFD])|\uD83D\uDC69\u200D\uD83D\uDC66\u200D\uD83D\uDC66|\uD83D\uDC69\u200D\uD83D\uDC69\u200D(?:\uD83D[\uDC66\uDC67])|(?:\uD83D\uDC41\uFE0F\u200D\uD83D\uDDE8|\uD83D\uDC69(?:\uD83C\uDFFF\u200D[\u2695\u2696\u2708]|\uD83C\uDFFE\u200D[\u2695\u2696\u2708]|\uD83C\uDFFC\u200D[\u2695\u2696\u2708]|\uD83C\uDFFB\u200D[\u2695\u2696\u2708]|\uD83C\uDFFD\u200D[\u2695\u2696\u2708]|\u200D[\u2695\u2696\u2708])|(?:(?:\u26F9|\uD83C[\uDFCB\uDFCC]|\uD83D\uDD75)\uFE0F|\uD83D\uDC6F|\uD83E[\uDD3C\uDDDE\uDDDF])\u200D[\u2640\u2642]|(?:\u26F9|\uD83C[\uDFCB\uDFCC]|\uD83D\uDD75)(?:\uD83C[\uDFFB-\uDFFF])\u200D[\u2640\u2642]|(?:\uD83C[\uDFC3\uDFC4\uDFCA]|\uD83D[\uDC6E\uDC71\uDC73\uDC77\uDC81\uDC82\uDC86\uDC87\uDE45-\uDE47\uDE4B\uDE4D\uDE4E\uDEA3\uDEB4-\uDEB6]|\uD83E[\uDD26\uDD37-\uDD39\uDD3D\uDD3E\uDDB8\uDDB9\uDDCD-\uDDCF\uDDD6-\uDDDD])(?:(?:\uD83C[\uDFFB-\uDFFF])\u200D[\u2640\u2642]|\u200D[\u2640\u2642])|\uD83C\uDFF4\u200D\u2620)\uFE0F|\uD83D\uDC69\u200D\uD83D\uDC67\u200D(?:\uD83D[\uDC66\uDC67])|\uD83C\uDFF3\uFE0F\u200D\uD83C\uDF08|\uD83D\uDC15\u200D\uD83E\uDDBA|\uD83D\uDC69\u200D\uD83D\uDC66|\uD83D\uDC69\u200D\uD83D\uDC67|\uD83C\uDDFD\uD83C\uDDF0|\uD83C\uDDF4\uD83C\uDDF2|\uD83C\uDDF6\uD83C\uDDE6|[#\*0-9]\uFE0F\u20E3|\uD83C\uDDE7(?:\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEF\uDDF1-\uDDF4\uDDF6-\uDDF9\uDDFB\uDDFC\uDDFE\uDDFF])|\uD83C\uDDF9(?:\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDED\uDDEF-\uDDF4\uDDF7\uDDF9\uDDFB\uDDFC\uDDFF])|\uD83C\uDDEA(?:\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDED\uDDF7-\uDDFA])|\uD83E\uDDD1(?:\uD83C[\uDFFB-\uDFFF])|\uD83C\uDDF7(?:\uD83C[\uDDEA\uDDF4\uDDF8\uDDFA\uDDFC])|\uD83D\uDC69(?:\uD83C[\uDFFB-\uDFFF])|\uD83C\uDDF2(?:\uD83C[\uDDE6\uDDE8-\uDDED\uDDF0-\uDDFF])|\uD83C\uDDE6(?:\uD83C[\uDDE8-\uDDEC\uDDEE\uDDF1\uDDF2\uDDF4\uDDF6-\uDDFA\uDDFC\uDDFD\uDDFF])|\uD83C\uDDF0(?:\uD83C[\uDDEA\uDDEC-\uDDEE\uDDF2\uDDF3\uDDF5\uDDF7\uDDFC\uDDFE\uDDFF])|\uD83C\uDDED(?:\uD83C[\uDDF0\uDDF2\uDDF3\uDDF7\uDDF9\uDDFA])|\uD83C\uDDE9(?:\uD83C[\uDDEA\uDDEC\uDDEF\uDDF0\uDDF2\uDDF4\uDDFF])|\uD83C\uDDFE(?:\uD83C[\uDDEA\uDDF9])|\uD83C\uDDEC(?:\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEE\uDDF1-\uDDF3\uDDF5-\uDDFA\uDDFC\uDDFE])|\uD83C\uDDF8(?:\uD83C[\uDDE6-\uDDEA\uDDEC-\uDDF4\uDDF7-\uDDF9\uDDFB\uDDFD-\uDDFF])|\uD83C\uDDEB(?:\uD83C[\uDDEE-\uDDF0\uDDF2\uDDF4\uDDF7])|\uD83C\uDDF5(?:\uD83C[\uDDE6\uDDEA-\uDDED\uDDF0-\uDDF3\uDDF7-\uDDF9\uDDFC\uDDFE])|\uD83C\uDDFB(?:\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDEE\uDDF3\uDDFA])|\uD83C\uDDF3(?:\uD83C[\uDDE6\uDDE8\uDDEA-\uDDEC\uDDEE\uDDF1\uDDF4\uDDF5\uDDF7\uDDFA\uDDFF])|\uD83C\uDDE8(?:\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDEE\uDDF0-\uDDF5\uDDF7\uDDFA-\uDDFF])|\uD83C\uDDF1(?:\uD83C[\uDDE6-\uDDE8\uDDEE\uDDF0\uDDF7-\uDDFB\uDDFE])|\uD83C\uDDFF(?:\uD83C[\uDDE6\uDDF2\uDDFC])|\uD83C\uDDFC(?:\uD83C[\uDDEB\uDDF8])|\uD83C\uDDFA(?:\uD83C[\uDDE6\uDDEC\uDDF2\uDDF3\uDDF8\uDDFE\uDDFF])|\uD83C\uDDEE(?:\uD83C[\uDDE8-\uDDEA\uDDF1-\uDDF4\uDDF6-\uDDF9])|\uD83C\uDDEF(?:\uD83C[\uDDEA\uDDF2\uDDF4\uDDF5])|(?:\uD83C[\uDFC3\uDFC4\uDFCA]|\uD83D[\uDC6E\uDC71\uDC73\uDC77\uDC81\uDC82\uDC86\uDC87\uDE45-\uDE47\uDE4B\uDE4D\uDE4E\uDEA3\uDEB4-\uDEB6]|\uD83E[\uDD26\uDD37-\uDD39\uDD3D\uDD3E\uDDB8\uDDB9\uDDCD-\uDDCF\uDDD6-\uDDDD])(?:\uD83C[\uDFFB-\uDFFF])|(?:\u26F9|\uD83C[\uDFCB\uDFCC]|\uD83D\uDD75)(?:\uD83C[\uDFFB-\uDFFF])|(?:[\u261D\u270A-\u270D]|\uD83C[\uDF85\uDFC2\uDFC7]|\uD83D[\uDC42\uDC43\uDC46-\uDC50\uDC66\uDC67\uDC6B-\uDC6D\uDC70\uDC72\uDC74-\uDC76\uDC78\uDC7C\uDC83\uDC85\uDCAA\uDD74\uDD7A\uDD90\uDD95\uDD96\uDE4C\uDE4F\uDEC0\uDECC]|\uD83E[\uDD0F\uDD18-\uDD1C\uDD1E\uDD1F\uDD30-\uDD36\uDDB5\uDDB6\uDDBB\uDDD2-\uDDD5])(?:\uD83C[\uDFFB-\uDFFF])|(?:[\u231A\u231B\u23E9-\u23EC\u23F0\u23F3\u25FD\u25FE\u2614\u2615\u2648-\u2653\u267F\u2693\u26A1\u26AA\u26AB\u26BD\u26BE\u26C4\u26C5\u26CE\u26D4\u26EA\u26F2\u26F3\u26F5\u26FA\u26FD\u2705\u270A\u270B\u2728\u274C\u274E\u2753-\u2755\u2757\u2795-\u2797\u27B0\u27BF\u2B1B\u2B1C\u2B50\u2B55]|\uD83C[\uDC04\uDCCF\uDD8E\uDD91-\uDD9A\uDDE6-\uDDFF\uDE01\uDE1A\uDE2F\uDE32-\uDE36\uDE38-\uDE3A\uDE50\uDE51\uDF00-\uDF20\uDF2D-\uDF35\uDF37-\uDF7C\uDF7E-\uDF93\uDFA0-\uDFCA\uDFCF-\uDFD3\uDFE0-\uDFF0\uDFF4\uDFF8-\uDFFF]|\uD83D[\uDC00-\uDC3E\uDC40\uDC42-\uDCFC\uDCFF-\uDD3D\uDD4B-\uDD4E\uDD50-\uDD67\uDD7A\uDD95\uDD96\uDDA4\uDDFB-\uDE4F\uDE80-\uDEC5\uDECC\uDED0-\uDED2\uDED5\uDEEB\uDEEC\uDEF4-\uDEFA\uDFE0-\uDFEB]|\uD83E[\uDD0D-\uDD3A\uDD3C-\uDD45\uDD47-\uDD71\uDD73-\uDD76\uDD7A-\uDDA2\uDDA5-\uDDAA\uDDAE-\uDDCA\uDDCD-\uDDFF\uDE70-\uDE73\uDE78-\uDE7A\uDE80-\uDE82\uDE90-\uDE95])|(?:[#\*0-9\xA9\xAE\u203C\u2049\u2122\u2139\u2194-\u2199\u21A9\u21AA\u231A\u231B\u2328\u23CF\u23E9-\u23F3\u23F8-\u23FA\u24C2\u25AA\u25AB\u25B6\u25C0\u25FB-\u25FE\u2600-\u2604\u260E\u2611\u2614\u2615\u2618\u261D\u2620\u2622\u2623\u2626\u262A\u262E\u262F\u2638-\u263A\u2640\u2642\u2648-\u2653\u265F\u2660\u2663\u2665\u2666\u2668\u267B\u267E\u267F\u2692-\u2697\u2699\u269B\u269C\u26A0\u26A1\u26AA\u26AB\u26B0\u26B1\u26BD\u26BE\u26C4\u26C5\u26C8\u26CE\u26CF\u26D1\u26D3\u26D4\u26E9\u26EA\u26F0-\u26F5\u26F7-\u26FA\u26FD\u2702\u2705\u2708-\u270D\u270F\u2712\u2714\u2716\u271D\u2721\u2728\u2733\u2734\u2744\u2747\u274C\u274E\u2753-\u2755\u2757\u2763\u2764\u2795-\u2797\u27A1\u27B0\u27BF\u2934\u2935\u2B05-\u2B07\u2B1B\u2B1C\u2B50\u2B55\u3030\u303D\u3297\u3299]|\uD83C[\uDC04\uDCCF\uDD70\uDD71\uDD7E\uDD7F\uDD8E\uDD91-\uDD9A\uDDE6-\uDDFF\uDE01\uDE02\uDE1A\uDE2F\uDE32-\uDE3A\uDE50\uDE51\uDF00-\uDF21\uDF24-\uDF93\uDF96\uDF97\uDF99-\uDF9B\uDF9E-\uDFF0\uDFF3-\uDFF5\uDFF7-\uDFFF]|\uD83D[\uDC00-\uDCFD\uDCFF-\uDD3D\uDD49-\uDD4E\uDD50-\uDD67\uDD6F\uDD70\uDD73-\uDD7A\uDD87\uDD8A-\uDD8D\uDD90\uDD95\uDD96\uDDA4\uDDA5\uDDA8\uDDB1\uDDB2\uDDBC\uDDC2-\uDDC4\uDDD1-\uDDD3\uDDDC-\uDDDE\uDDE1\uDDE3\uDDE8\uDDEF\uDDF3\uDDFA-\uDE4F\uDE80-\uDEC5\uDECB-\uDED2\uDED5\uDEE0-\uDEE5\uDEE9\uDEEB\uDEEC\uDEF0\uDEF3-\uDEFA\uDFE0-\uDFEB]|\uD83E[\uDD0D-\uDD3A\uDD3C-\uDD45\uDD47-\uDD71\uDD73-\uDD76\uDD7A-\uDDA2\uDDA5-\uDDAA\uDDAE-\uDDCA\uDDCD-\uDDFF\uDE70-\uDE73\uDE78-\uDE7A\uDE80-\uDE82\uDE90-\uDE95])\uFE0F|(?:[\u261D\u26F9\u270A-\u270D]|\uD83C[\uDF85\uDFC2-\uDFC4\uDFC7\uDFCA-\uDFCC]|\uD83D[\uDC42\uDC43\uDC46-\uDC50\uDC66-\uDC78\uDC7C\uDC81-\uDC83\uDC85-\uDC87\uDC8F\uDC91\uDCAA\uDD74\uDD75\uDD7A\uDD90\uDD95\uDD96\uDE45-\uDE47\uDE4B-\uDE4F\uDEA3\uDEB4-\uDEB6\uDEC0\uDECC]|\uD83E[\uDD0F\uDD18-\uDD1F\uDD26\uDD30-\uDD39\uDD3C-\uDD3E\uDDB5\uDDB6\uDDB8\uDDB9\uDDBB\uDDCD-\uDDCF\uDDD1-\uDDDD])/g;
 };
 
-const stripAnsi$1 = stripAnsi$2;
+const stripAnsi$2 = stripAnsi$3;
 const isFullwidthCodePoint = isFullwidthCodePointExports;
-const emojiRegex = emojiRegex$1;
+const emojiRegex$1 = emojiRegex$2;
 
-const stringWidth$1 = string => {
+const stringWidth$2 = string => {
 	if (typeof string !== 'string' || string.length === 0) {
 		return 0;
 	}
 
-	string = stripAnsi$1(string);
+	string = stripAnsi$2(string);
 
 	if (string.length === 0) {
 		return 0;
 	}
 
-	string = string.replace(emojiRegex(), '  ');
+	string = string.replace(emojiRegex$1(), '  ');
 
 	let width = 0;
 
@@ -6165,13 +6167,13 @@ const stringWidth$1 = string => {
 	return width;
 };
 
-stringWidth$2.exports = stringWidth$1;
+stringWidth$3.exports = stringWidth$2;
 // TODO: remove this in the next major version
-stringWidth$2.exports.default = stringWidth$1;
+stringWidth$3.exports.default = stringWidth$2;
 
-var stringWidthExports = stringWidth$2.exports;
+var stringWidthExports = stringWidth$3.exports;
 
-var ansiStyles$1 = {exports: {}};
+var ansiStyles$2 = {exports: {}};
 
 var colorName;
 var hasRequiredColorName;
@@ -7377,7 +7379,7 @@ function requireColorConvert () {
 	return colorConvert;
 }
 
-ansiStyles$1.exports;
+ansiStyles$2.exports;
 
 (function (module) {
 
@@ -7542,13 +7544,13 @@ ansiStyles$1.exports;
 		enumerable: true,
 		get: assembleStyles
 	}); 
-} (ansiStyles$1));
+} (ansiStyles$2));
 
-var ansiStylesExports = ansiStyles$1.exports;
+var ansiStylesExports = ansiStyles$2.exports;
 
-const stringWidth = stringWidthExports;
-const stripAnsi = stripAnsi$2;
-const ansiStyles = ansiStylesExports;
+const stringWidth$1 = stringWidthExports;
+const stripAnsi$1 = stripAnsi$3;
+const ansiStyles$1 = ansiStylesExports;
 
 const ESCAPES = new Set([
 	'\u001B',
@@ -7561,7 +7563,7 @@ const wrapAnsi = code => `${ESCAPES.values().next().value}[${code}m`;
 
 // Calculate the length of words split on ' ', ignoring
 // the extra characters added by ansi escape codes
-const wordLengths = string => string.split(' ').map(character => stringWidth(character));
+const wordLengths = string => string.split(' ').map(character => stringWidth$1(character));
 
 // Wrap a long word across multiple rows
 // Ansi escape codes do not count towards length
@@ -7569,10 +7571,10 @@ const wrapWord = (rows, word, columns) => {
 	const characters = [...word];
 
 	let isInsideEscape = false;
-	let visible = stringWidth(stripAnsi(rows[rows.length - 1]));
+	let visible = stringWidth$1(stripAnsi$1(rows[rows.length - 1]));
 
 	for (const [index, character] of characters.entries()) {
-		const characterLength = stringWidth(character);
+		const characterLength = stringWidth$1(character);
 
 		if (visible + characterLength <= columns) {
 			rows[rows.length - 1] += character;
@@ -7613,7 +7615,7 @@ const stringVisibleTrimSpacesRight = str => {
 	let last = words.length;
 
 	while (last > 0) {
-		if (stringWidth(words[last - 1]) > 0) {
+		if (stringWidth$1(words[last - 1]) > 0) {
 			break;
 		}
 
@@ -7649,7 +7651,7 @@ const exec = (string, columns, options = {}) => {
 			rows[rows.length - 1] = rows[rows.length - 1].trimLeft();
 		}
 
-		let rowLength = stringWidth(rows[rows.length - 1]);
+		let rowLength = stringWidth$1(rows[rows.length - 1]);
 
 		if (index !== 0) {
 			if (rowLength >= columns && (options.wordWrap === false || options.trim === false)) {
@@ -7708,7 +7710,7 @@ const exec = (string, columns, options = {}) => {
 			escapeCode = code === END_CODE ? null : code;
 		}
 
-		const code = ansiStyles.codes.get(Number(escapeCode));
+		const code = ansiStyles$1.codes.get(Number(escapeCode));
 
 		if (escapeCode && code) {
 			if (pre[index + 1] === '\n') {
@@ -8046,24 +8048,24 @@ var MuteStream$1 = /*@__PURE__*/getDefaultExportFromCjs(lib$1);
  * state from which it is not safe to try and enter JS
  * listeners.
  */
-const signals = [];
-signals.push('SIGHUP', 'SIGINT', 'SIGTERM');
+const signals$2 = [];
+signals$2.push('SIGHUP', 'SIGINT', 'SIGTERM');
 if (process.platform !== 'win32') {
-    signals.push('SIGALRM', 'SIGABRT', 'SIGVTALRM', 'SIGXCPU', 'SIGXFSZ', 'SIGUSR2', 'SIGTRAP', 'SIGSYS', 'SIGQUIT', 'SIGIOT'
+    signals$2.push('SIGALRM', 'SIGABRT', 'SIGVTALRM', 'SIGXCPU', 'SIGXFSZ', 'SIGUSR2', 'SIGTRAP', 'SIGSYS', 'SIGQUIT', 'SIGIOT'
     // should detect profiler and enable/disable accordingly.
     // see #21
     // 'SIGPROF'
     );
 }
 if (process.platform === 'linux') {
-    signals.push('SIGIO', 'SIGPOLL', 'SIGPWR', 'SIGSTKFLT');
+    signals$2.push('SIGIO', 'SIGPOLL', 'SIGPWR', 'SIGSTKFLT');
 }
 
 // Note: since nyc uses this module to output coverage, any lines
 // that are in the direct sync flow of nyc's outputCoverage are
 // ignored, since we can never get coverage for them.
 // grab a reference to node's real process object right away
-const processOk = (process) => !!process &&
+const processOk$1 = (process) => !!process &&
     typeof process === 'object' &&
     typeof process.removeListener === 'function' &&
     typeof process.emit === 'function' &&
@@ -8157,7 +8159,7 @@ class SignalExit extends SignalExitBase {
     // "SIGHUP" throws an `ENOSYS` error on Windows,
     // so use a supported signal instead
     /* c8 ignore start */
-    #hupSig = process$2.platform === 'win32' ? 'SIGINT' : 'SIGHUP';
+    #hupSig = process$3.platform === 'win32' ? 'SIGINT' : 'SIGHUP';
     /* c8 ignore stop */
     #emitter = new Emitter();
     #process;
@@ -8170,7 +8172,7 @@ class SignalExit extends SignalExitBase {
         this.#process = process;
         // { <signal>: <listener fn>, ... }
         this.#sigListeners = {};
-        for (const sig of signals) {
+        for (const sig of signals$2) {
             this.#sigListeners[sig] = () => {
                 // If there are no other listeners, an exit is coming!
                 // Simplest way: remove us and then re-send the signal.
@@ -8207,7 +8209,7 @@ class SignalExit extends SignalExitBase {
     }
     onExit(cb, opts) {
         /* c8 ignore start */
-        if (!processOk(this.#process)) {
+        if (!processOk$1(this.#process)) {
             return () => { };
         }
         /* c8 ignore stop */
@@ -8234,7 +8236,7 @@ class SignalExit extends SignalExitBase {
         // listeners on signals, and don't wait for the other one to
         // handle it instead of us.
         this.#emitter.count += 1;
-        for (const sig of signals) {
+        for (const sig of signals$2) {
             try {
                 const fn = this.#sigListeners[sig];
                 if (fn)
@@ -8254,7 +8256,7 @@ class SignalExit extends SignalExitBase {
             return;
         }
         this.#loaded = false;
-        signals.forEach(sig => {
+        signals$2.forEach(sig => {
             const listener = this.#sigListeners[sig];
             /* c8 ignore start */
             if (!listener) {
@@ -8274,7 +8276,7 @@ class SignalExit extends SignalExitBase {
     }
     #processReallyExit(code) {
         /* c8 ignore start */
-        if (!processOk(this.#process)) {
+        if (!processOk$1(this.#process)) {
             return 0;
         }
         this.#process.exitCode = code || 0;
@@ -8284,7 +8286,7 @@ class SignalExit extends SignalExitBase {
     }
     #processEmit(ev, ...args) {
         const og = this.#originalProcessEmit;
-        if (ev === 'exit' && processOk(this.#process)) {
+        if (ev === 'exit' && processOk$1(this.#process)) {
             if (typeof args[0] === 'number') {
                 this.#process.exitCode = args[0];
                 /* c8 ignore start */
@@ -8301,7 +8303,7 @@ class SignalExit extends SignalExitBase {
         }
     }
 }
-const process$2 = globalThis.process;
+const process$3 = globalThis.process;
 // wrap so that we call the method on the actual handler, without
 // exporting it directly.
 const { 
@@ -8322,7 +8324,7 @@ onExit,
  *
  * @internal
  */
-load, 
+load: load$1, 
 /**
  * Unload the listeners.  Likely you never need to call this, unless
  * doing a rather deep integration with signal-exit functionality.
@@ -8330,7 +8332,7 @@ load,
  *
  * @internal
  */
-unload, } = signalExitWrap(processOk(process$2) ? new SignalExit(process$2) : new SignalExitFallback());
+unload: unload$1, } = signalExitWrap(processOk$1(process$3) ? new SignalExit(process$3) : new SignalExitFallback());
 
 var ansiEscapes$1 = {exports: {}};
 
@@ -8514,7 +8516,7 @@ class ScreenManager {
          * Write message to screen and setPrompt to control backspace
          */
         const promptLine = lastLine(content);
-        const rawPromptLine = stripAnsi$3(promptLine);
+        const rawPromptLine = stripAnsi$4(promptLine);
         // Remove the rl.line from our prompt. We can't rely on the content of
         // rl.line (mainly because of the password prompt), so just rely on it's
         // length.
@@ -8686,18 +8688,18 @@ function createPrompt(view) {
 // Property 'TERM' comes from an index signature, so it must be accessed with ['TERM'].ts(4111)
 /* eslint dot-notation: ["off"] */
 // Ported from is-unicode-supported
-function isUnicodeSupported() {
-    if (process$4.platform !== 'win32') {
-        return process$4.env['TERM'] !== 'linux'; // Linux console (kernel)
+function isUnicodeSupported$1() {
+    if (process$5.platform !== 'win32') {
+        return process$5.env['TERM'] !== 'linux'; // Linux console (kernel)
     }
-    return (Boolean(process$4.env['WT_SESSION']) || // Windows Terminal
-        Boolean(process$4.env['TERMINUS_SUBLIME']) || // Terminus (<0.2.27)
-        process$4.env['ConEmuTask'] === '{cmd::Cmder}' || // ConEmu and cmder
-        process$4.env['TERM_PROGRAM'] === 'Terminus-Sublime' ||
-        process$4.env['TERM_PROGRAM'] === 'vscode' ||
-        process$4.env['TERM'] === 'xterm-256color' ||
-        process$4.env['TERM'] === 'alacritty' ||
-        process$4.env['TERMINAL_EMULATOR'] === 'JetBrains-JediTerm');
+    return (Boolean(process$5.env['WT_SESSION']) || // Windows Terminal
+        Boolean(process$5.env['TERMINUS_SUBLIME']) || // Terminus (<0.2.27)
+        process$5.env['ConEmuTask'] === '{cmd::Cmder}' || // ConEmu and cmder
+        process$5.env['TERM_PROGRAM'] === 'Terminus-Sublime' ||
+        process$5.env['TERM_PROGRAM'] === 'vscode' ||
+        process$5.env['TERM'] === 'xterm-256color' ||
+        process$5.env['TERM'] === 'alacritty' ||
+        process$5.env['TERMINAL_EMULATOR'] === 'JetBrains-JediTerm');
 }
 // Ported from figures
 const common$1 = {
@@ -8973,7 +8975,7 @@ const fallbackSymbols = {
     ...common$1,
     ...specialFallbackSymbols,
 };
-const shouldUseMain = isUnicodeSupported();
+const shouldUseMain = isUnicodeSupported$1();
 const figures = shouldUseMain ? mainSymbols : fallbackSymbols;
 
 /**
@@ -10916,7 +10918,7 @@ var iso2022$1 = {exports: {}};
 
 var iso2022Exports = iso2022$1.exports;
 
-var fs$1 = require$$0$6;
+var fs$1 = fs$3;
 
 var utf8  = utf8$1,
   unicode = unicodeExports,
@@ -11071,7 +11073,7 @@ var lib = {exports: {}};
 
 /* eslint-disable node/no-deprecated-api */
 
-var buffer = require$$0$7;
+var buffer = require$$0$6;
 var Buffer$1 = buffer.Buffer;
 
 var safer = {};
@@ -21653,7 +21655,7 @@ function requireStreams () {
 	if (hasRequiredStreams) return streams;
 	hasRequiredStreams = 1;
 
-	var Buffer = require$$0$7.Buffer,
+	var Buffer = require$$0$6.Buffer,
 	    Transform = require$$1$2.Transform;
 
 
@@ -21780,7 +21782,7 @@ var hasRequiredExtendNode;
 function requireExtendNode () {
 	if (hasRequiredExtendNode) return extendNode;
 	hasRequiredExtendNode = 1;
-	var Buffer = require$$0$7.Buffer;
+	var Buffer = require$$0$6.Buffer;
 	// Note: not polyfilled with safer-buffer on a purpose, as overrides Buffer
 
 	// == Extend Node primitives to use iconv-lite =================================
@@ -21813,7 +21815,7 @@ function requireExtendNode () {
 	        };
 
 	        // -- SlowBuffer -----------------------------------------------------------
-	        var SlowBuffer = require$$0$7.SlowBuffer;
+	        var SlowBuffer = require$$0$6.SlowBuffer;
 
 	        original.SlowBufferToString = SlowBuffer.prototype.toString;
 	        SlowBuffer.prototype.toString = function(encoding, start, end) {
@@ -21976,7 +21978,7 @@ function requireExtendNode () {
 
 	        delete Buffer.isNativeEncoding;
 
-	        var SlowBuffer = require$$0$7.SlowBuffer;
+	        var SlowBuffer = require$$0$6.SlowBuffer;
 
 	        SlowBuffer.prototype.toString = original.SlowBufferToString;
 	        SlowBuffer.prototype.write = original.SlowBufferWrite;
@@ -22190,7 +22192,7 @@ var osTmpdir = function () {
 /*
  * Module dependencies.
  */
-const fs = require$$0$6;
+const fs = fs$3;
 const path = path$2;
 const crypto = require$$2$2;
 const osTmpDir = osTmpdir;
@@ -22964,7 +22966,7 @@ RemoveFileError$1.RemoveFileError = RemoveFileError;
 Object.defineProperty(main, "__esModule", { value: true });
 var chardet_1 = chardet;
 var child_process_1 = require$$1$4;
-var fs_1 = require$$0$6;
+var fs_1 = fs$3;
 var iconv_lite_1 = libExports;
 var tmp_1 = tmp;
 var CreateFileError_1 = CreateFileError$1;
@@ -24612,13 +24614,13 @@ function fromIterable(iterable) {
 }
 function fromAsyncIterable(asyncIterable) {
     return new Observable(function (subscriber) {
-        process$1(asyncIterable, subscriber).catch(function (err) { return subscriber.error(err); });
+        process$2(asyncIterable, subscriber).catch(function (err) { return subscriber.error(err); });
     });
 }
 function fromReadableStreamLike(readableStream) {
     return fromAsyncIterable(readableStreamLikeToAsyncGenerator(readableStream));
 }
-function process$1(asyncIterable, subscriber) {
+function process$2(asyncIterable, subscriber) {
     var asyncIterable_1, asyncIterable_1_1;
     var e_2, _a;
     return __awaiter(this, void 0, void 0, function () {
@@ -26421,7 +26423,7 @@ var debug = /*@__PURE__*/getDefaultExportFromCjs(srcExports);
 	    return (mod && mod.__esModule) ? mod : { "default": mod };
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
-	const fs_1 = require$$0$6;
+	const fs_1 = fs$3;
 	const debug_1 = __importDefault(srcExports);
 	const log = debug_1.default('@kwsites/file-exists');
 	function check(path, isFile, isDirectory) {
@@ -31117,6 +31119,1805 @@ function gitInstanceFactory(baseDir, options) {
 init_git_response_error();
 var esm_default = gitInstanceFactory;
 
+const ANSI_BACKGROUND_OFFSET = 10;
+
+const wrapAnsi16 = (offset = 0) => code => `\u001B[${code + offset}m`;
+
+const wrapAnsi256 = (offset = 0) => code => `\u001B[${38 + offset};5;${code}m`;
+
+const wrapAnsi16m = (offset = 0) => (red, green, blue) => `\u001B[${38 + offset};2;${red};${green};${blue}m`;
+
+const styles$1 = {
+	modifier: {
+		reset: [0, 0],
+		// 21 isn't widely supported and 22 does the same thing
+		bold: [1, 22],
+		dim: [2, 22],
+		italic: [3, 23],
+		underline: [4, 24],
+		overline: [53, 55],
+		inverse: [7, 27],
+		hidden: [8, 28],
+		strikethrough: [9, 29],
+	},
+	color: {
+		black: [30, 39],
+		red: [31, 39],
+		green: [32, 39],
+		yellow: [33, 39],
+		blue: [34, 39],
+		magenta: [35, 39],
+		cyan: [36, 39],
+		white: [37, 39],
+
+		// Bright color
+		blackBright: [90, 39],
+		gray: [90, 39], // Alias of `blackBright`
+		grey: [90, 39], // Alias of `blackBright`
+		redBright: [91, 39],
+		greenBright: [92, 39],
+		yellowBright: [93, 39],
+		blueBright: [94, 39],
+		magentaBright: [95, 39],
+		cyanBright: [96, 39],
+		whiteBright: [97, 39],
+	},
+	bgColor: {
+		bgBlack: [40, 49],
+		bgRed: [41, 49],
+		bgGreen: [42, 49],
+		bgYellow: [43, 49],
+		bgBlue: [44, 49],
+		bgMagenta: [45, 49],
+		bgCyan: [46, 49],
+		bgWhite: [47, 49],
+
+		// Bright color
+		bgBlackBright: [100, 49],
+		bgGray: [100, 49], // Alias of `bgBlackBright`
+		bgGrey: [100, 49], // Alias of `bgBlackBright`
+		bgRedBright: [101, 49],
+		bgGreenBright: [102, 49],
+		bgYellowBright: [103, 49],
+		bgBlueBright: [104, 49],
+		bgMagentaBright: [105, 49],
+		bgCyanBright: [106, 49],
+		bgWhiteBright: [107, 49],
+	},
+};
+
+Object.keys(styles$1.modifier);
+const foregroundColorNames = Object.keys(styles$1.color);
+const backgroundColorNames = Object.keys(styles$1.bgColor);
+[...foregroundColorNames, ...backgroundColorNames];
+
+function assembleStyles() {
+	const codes = new Map();
+
+	for (const [groupName, group] of Object.entries(styles$1)) {
+		for (const [styleName, style] of Object.entries(group)) {
+			styles$1[styleName] = {
+				open: `\u001B[${style[0]}m`,
+				close: `\u001B[${style[1]}m`,
+			};
+
+			group[styleName] = styles$1[styleName];
+
+			codes.set(style[0], style[1]);
+		}
+
+		Object.defineProperty(styles$1, groupName, {
+			value: group,
+			enumerable: false,
+		});
+	}
+
+	Object.defineProperty(styles$1, 'codes', {
+		value: codes,
+		enumerable: false,
+	});
+
+	styles$1.color.close = '\u001B[39m';
+	styles$1.bgColor.close = '\u001B[49m';
+
+	styles$1.color.ansi = wrapAnsi16();
+	styles$1.color.ansi256 = wrapAnsi256();
+	styles$1.color.ansi16m = wrapAnsi16m();
+	styles$1.bgColor.ansi = wrapAnsi16(ANSI_BACKGROUND_OFFSET);
+	styles$1.bgColor.ansi256 = wrapAnsi256(ANSI_BACKGROUND_OFFSET);
+	styles$1.bgColor.ansi16m = wrapAnsi16m(ANSI_BACKGROUND_OFFSET);
+
+	// From https://github.com/Qix-/color-convert/blob/3f0e0d4e92e235796ccb17f6e85c72094a651f49/conversions.js
+	Object.defineProperties(styles$1, {
+		rgbToAnsi256: {
+			value(red, green, blue) {
+				// We use the extended greyscale palette here, with the exception of
+				// black and white. normal palette only has 4 greyscale shades.
+				if (red === green && green === blue) {
+					if (red < 8) {
+						return 16;
+					}
+
+					if (red > 248) {
+						return 231;
+					}
+
+					return Math.round(((red - 8) / 247) * 24) + 232;
+				}
+
+				return 16
+					+ (36 * Math.round(red / 255 * 5))
+					+ (6 * Math.round(green / 255 * 5))
+					+ Math.round(blue / 255 * 5);
+			},
+			enumerable: false,
+		},
+		hexToRgb: {
+			value(hex) {
+				const matches = /[a-f\d]{6}|[a-f\d]{3}/i.exec(hex.toString(16));
+				if (!matches) {
+					return [0, 0, 0];
+				}
+
+				let [colorString] = matches;
+
+				if (colorString.length === 3) {
+					colorString = [...colorString].map(character => character + character).join('');
+				}
+
+				const integer = Number.parseInt(colorString, 16);
+
+				return [
+					/* eslint-disable no-bitwise */
+					(integer >> 16) & 0xFF,
+					(integer >> 8) & 0xFF,
+					integer & 0xFF,
+					/* eslint-enable no-bitwise */
+				];
+			},
+			enumerable: false,
+		},
+		hexToAnsi256: {
+			value: hex => styles$1.rgbToAnsi256(...styles$1.hexToRgb(hex)),
+			enumerable: false,
+		},
+		ansi256ToAnsi: {
+			value(code) {
+				if (code < 8) {
+					return 30 + code;
+				}
+
+				if (code < 16) {
+					return 90 + (code - 8);
+				}
+
+				let red;
+				let green;
+				let blue;
+
+				if (code >= 232) {
+					red = (((code - 232) * 10) + 8) / 255;
+					green = red;
+					blue = red;
+				} else {
+					code -= 16;
+
+					const remainder = code % 36;
+
+					red = Math.floor(code / 36) / 5;
+					green = Math.floor(remainder / 6) / 5;
+					blue = (remainder % 6) / 5;
+				}
+
+				const value = Math.max(red, green, blue) * 2;
+
+				if (value === 0) {
+					return 30;
+				}
+
+				// eslint-disable-next-line no-bitwise
+				let result = 30 + ((Math.round(blue) << 2) | (Math.round(green) << 1) | Math.round(red));
+
+				if (value === 2) {
+					result += 60;
+				}
+
+				return result;
+			},
+			enumerable: false,
+		},
+		rgbToAnsi: {
+			value: (red, green, blue) => styles$1.ansi256ToAnsi(styles$1.rgbToAnsi256(red, green, blue)),
+			enumerable: false,
+		},
+		hexToAnsi: {
+			value: hex => styles$1.ansi256ToAnsi(styles$1.hexToAnsi256(hex)),
+			enumerable: false,
+		},
+	});
+
+	return styles$1;
+}
+
+const ansiStyles = assembleStyles();
+
+/* eslint-env browser */
+
+const level = (() => {
+	if (navigator.userAgentData) {
+		const brand = navigator.userAgentData.brands.find(({brand}) => brand === 'Chromium');
+		if (brand && brand.version > 93) {
+			return 3;
+		}
+	}
+
+	if (/\b(Chrome|Chromium)\//.test(navigator.userAgent)) {
+		return 1;
+	}
+
+	return 0;
+})();
+
+const colorSupport = level !== 0 && {
+	level,
+	hasBasic: true,
+	has256: level >= 2,
+	has16m: level >= 3,
+};
+
+const supportsColor = {
+	stdout: colorSupport,
+	stderr: colorSupport,
+};
+
+// TODO: When targeting Node.js 16, use `String.prototype.replaceAll`.
+function stringReplaceAll(string, substring, replacer) {
+	let index = string.indexOf(substring);
+	if (index === -1) {
+		return string;
+	}
+
+	const substringLength = substring.length;
+	let endIndex = 0;
+	let returnValue = '';
+	do {
+		returnValue += string.slice(endIndex, index) + substring + replacer;
+		endIndex = index + substringLength;
+		index = string.indexOf(substring, endIndex);
+	} while (index !== -1);
+
+	returnValue += string.slice(endIndex);
+	return returnValue;
+}
+
+function stringEncaseCRLFWithFirstIndex(string, prefix, postfix, index) {
+	let endIndex = 0;
+	let returnValue = '';
+	do {
+		const gotCR = string[index - 1] === '\r';
+		returnValue += string.slice(endIndex, (gotCR ? index - 1 : index)) + prefix + (gotCR ? '\r\n' : '\n') + postfix;
+		endIndex = index + 1;
+		index = string.indexOf('\n', endIndex);
+	} while (index !== -1);
+
+	returnValue += string.slice(endIndex);
+	return returnValue;
+}
+
+const {stdout: stdoutColor, stderr: stderrColor} = supportsColor;
+
+const GENERATOR = Symbol('GENERATOR');
+const STYLER = Symbol('STYLER');
+const IS_EMPTY = Symbol('IS_EMPTY');
+
+// `supportsColor.level` → `ansiStyles.color[name]` mapping
+const levelMapping = [
+	'ansi',
+	'ansi',
+	'ansi256',
+	'ansi16m',
+];
+
+const styles = Object.create(null);
+
+const applyOptions = (object, options = {}) => {
+	if (options.level && !(Number.isInteger(options.level) && options.level >= 0 && options.level <= 3)) {
+		throw new Error('The `level` option should be an integer from 0 to 3');
+	}
+
+	// Detect level if not set manually
+	const colorLevel = stdoutColor ? stdoutColor.level : 0;
+	object.level = options.level === undefined ? colorLevel : options.level;
+};
+
+const chalkFactory = options => {
+	const chalk = (...strings) => strings.join(' ');
+	applyOptions(chalk, options);
+
+	Object.setPrototypeOf(chalk, createChalk.prototype);
+
+	return chalk;
+};
+
+function createChalk(options) {
+	return chalkFactory(options);
+}
+
+Object.setPrototypeOf(createChalk.prototype, Function.prototype);
+
+for (const [styleName, style] of Object.entries(ansiStyles)) {
+	styles[styleName] = {
+		get() {
+			const builder = createBuilder(this, createStyler(style.open, style.close, this[STYLER]), this[IS_EMPTY]);
+			Object.defineProperty(this, styleName, {value: builder});
+			return builder;
+		},
+	};
+}
+
+styles.visible = {
+	get() {
+		const builder = createBuilder(this, this[STYLER], true);
+		Object.defineProperty(this, 'visible', {value: builder});
+		return builder;
+	},
+};
+
+const getModelAnsi = (model, level, type, ...arguments_) => {
+	if (model === 'rgb') {
+		if (level === 'ansi16m') {
+			return ansiStyles[type].ansi16m(...arguments_);
+		}
+
+		if (level === 'ansi256') {
+			return ansiStyles[type].ansi256(ansiStyles.rgbToAnsi256(...arguments_));
+		}
+
+		return ansiStyles[type].ansi(ansiStyles.rgbToAnsi(...arguments_));
+	}
+
+	if (model === 'hex') {
+		return getModelAnsi('rgb', level, type, ...ansiStyles.hexToRgb(...arguments_));
+	}
+
+	return ansiStyles[type][model](...arguments_);
+};
+
+const usedModels = ['rgb', 'hex', 'ansi256'];
+
+for (const model of usedModels) {
+	styles[model] = {
+		get() {
+			const {level} = this;
+			return function (...arguments_) {
+				const styler = createStyler(getModelAnsi(model, levelMapping[level], 'color', ...arguments_), ansiStyles.color.close, this[STYLER]);
+				return createBuilder(this, styler, this[IS_EMPTY]);
+			};
+		},
+	};
+
+	const bgModel = 'bg' + model[0].toUpperCase() + model.slice(1);
+	styles[bgModel] = {
+		get() {
+			const {level} = this;
+			return function (...arguments_) {
+				const styler = createStyler(getModelAnsi(model, levelMapping[level], 'bgColor', ...arguments_), ansiStyles.bgColor.close, this[STYLER]);
+				return createBuilder(this, styler, this[IS_EMPTY]);
+			};
+		},
+	};
+}
+
+const proto = Object.defineProperties(() => {}, {
+	...styles,
+	level: {
+		enumerable: true,
+		get() {
+			return this[GENERATOR].level;
+		},
+		set(level) {
+			this[GENERATOR].level = level;
+		},
+	},
+});
+
+const createStyler = (open, close, parent) => {
+	let openAll;
+	let closeAll;
+	if (parent === undefined) {
+		openAll = open;
+		closeAll = close;
+	} else {
+		openAll = parent.openAll + open;
+		closeAll = close + parent.closeAll;
+	}
+
+	return {
+		open,
+		close,
+		openAll,
+		closeAll,
+		parent,
+	};
+};
+
+const createBuilder = (self, _styler, _isEmpty) => {
+	// Single argument is hot path, implicit coercion is faster than anything
+	// eslint-disable-next-line no-implicit-coercion
+	const builder = (...arguments_) => applyStyle(builder, (arguments_.length === 1) ? ('' + arguments_[0]) : arguments_.join(' '));
+
+	// We alter the prototype because we must return a function, but there is
+	// no way to create a function with a different prototype
+	Object.setPrototypeOf(builder, proto);
+
+	builder[GENERATOR] = self;
+	builder[STYLER] = _styler;
+	builder[IS_EMPTY] = _isEmpty;
+
+	return builder;
+};
+
+const applyStyle = (self, string) => {
+	if (self.level <= 0 || !string) {
+		return self[IS_EMPTY] ? '' : string;
+	}
+
+	let styler = self[STYLER];
+
+	if (styler === undefined) {
+		return string;
+	}
+
+	const {openAll, closeAll} = styler;
+	if (string.includes('\u001B')) {
+		while (styler !== undefined) {
+			// Replace any instances already present with a re-opening code
+			// otherwise only the part of the string until said closing code
+			// will be colored, and the rest will simply be 'plain'.
+			string = stringReplaceAll(string, styler.close, styler.open);
+
+			styler = styler.parent;
+		}
+	}
+
+	// We can move both next actions out of loop, because remaining actions in loop won't have
+	// any/visible effect on parts we add here. Close the styling before a linebreak and reopen
+	// after next line to fix a bleed issue on macOS: https://github.com/chalk/chalk/pull/92
+	const lfIndex = string.indexOf('\n');
+	if (lfIndex !== -1) {
+		string = stringEncaseCRLFWithFirstIndex(string, closeAll, openAll, lfIndex);
+	}
+
+	return openAll + string + closeAll;
+};
+
+Object.defineProperties(createChalk.prototype, styles);
+
+const chalk = createChalk();
+createChalk({level: stderrColor ? stderrColor.level : 0});
+
+var onetime$2 = {exports: {}};
+
+var mimicFn$2 = {exports: {}};
+
+const mimicFn$1 = (to, from) => {
+	for (const prop of Reflect.ownKeys(from)) {
+		Object.defineProperty(to, prop, Object.getOwnPropertyDescriptor(from, prop));
+	}
+
+	return to;
+};
+
+mimicFn$2.exports = mimicFn$1;
+// TODO: Remove this for the next major release
+mimicFn$2.exports.default = mimicFn$1;
+
+var mimicFnExports = mimicFn$2.exports;
+
+const mimicFn = mimicFnExports;
+
+const calledFunctions = new WeakMap();
+
+const onetime = (function_, options = {}) => {
+	if (typeof function_ !== 'function') {
+		throw new TypeError('Expected a function');
+	}
+
+	let returnValue;
+	let callCount = 0;
+	const functionName = function_.displayName || function_.name || '<anonymous>';
+
+	const onetime = function (...arguments_) {
+		calledFunctions.set(onetime, ++callCount);
+
+		if (callCount === 1) {
+			returnValue = function_.apply(this, arguments_);
+			function_ = null;
+		} else if (options.throw === true) {
+			throw new Error(`Function \`${functionName}\` can only be called once`);
+		}
+
+		return returnValue;
+	};
+
+	mimicFn(onetime, function_);
+	calledFunctions.set(onetime, callCount);
+
+	return onetime;
+};
+
+onetime$2.exports = onetime;
+// TODO: Remove this for the next major release
+onetime$2.exports.default = onetime;
+
+onetime$2.exports.callCount = function_ => {
+	if (!calledFunctions.has(function_)) {
+		throw new Error(`The given function \`${function_.name}\` is not wrapped by the \`onetime\` package`);
+	}
+
+	return calledFunctions.get(function_);
+};
+
+var onetimeExports = onetime$2.exports;
+var onetime$1 = /*@__PURE__*/getDefaultExportFromCjs(onetimeExports);
+
+var signalExit$1 = {exports: {}};
+
+var signals$1 = {exports: {}};
+
+var hasRequiredSignals;
+
+function requireSignals () {
+	if (hasRequiredSignals) return signals$1.exports;
+	hasRequiredSignals = 1;
+	(function (module) {
+		// This is not the set of all possible signals.
+		//
+		// It IS, however, the set of all signals that trigger
+		// an exit on either Linux or BSD systems.  Linux is a
+		// superset of the signal names supported on BSD, and
+		// the unknown signals just fail to register, so we can
+		// catch that easily enough.
+		//
+		// Don't bother with SIGKILL.  It's uncatchable, which
+		// means that we can't fire any callbacks anyway.
+		//
+		// If a user does happen to register a handler on a non-
+		// fatal signal like SIGWINCH or something, and then
+		// exit, it'll end up firing `process.emit('exit')`, so
+		// the handler will be fired anyway.
+		//
+		// SIGBUS, SIGFPE, SIGSEGV and SIGILL, when not raised
+		// artificially, inherently leave the process in a
+		// state from which it is not safe to try and enter JS
+		// listeners.
+		module.exports = [
+		  'SIGABRT',
+		  'SIGALRM',
+		  'SIGHUP',
+		  'SIGINT',
+		  'SIGTERM'
+		];
+
+		if (process.platform !== 'win32') {
+		  module.exports.push(
+		    'SIGVTALRM',
+		    'SIGXCPU',
+		    'SIGXFSZ',
+		    'SIGUSR2',
+		    'SIGTRAP',
+		    'SIGSYS',
+		    'SIGQUIT',
+		    'SIGIOT'
+		    // should detect profiler and enable/disable accordingly.
+		    // see #21
+		    // 'SIGPROF'
+		  );
+		}
+
+		if (process.platform === 'linux') {
+		  module.exports.push(
+		    'SIGIO',
+		    'SIGPOLL',
+		    'SIGPWR',
+		    'SIGSTKFLT',
+		    'SIGUNUSED'
+		  );
+		} 
+	} (signals$1));
+	return signals$1.exports;
+}
+
+// Note: since nyc uses this module to output coverage, any lines
+// that are in the direct sync flow of nyc's outputCoverage are
+// ignored, since we can never get coverage for them.
+// grab a reference to node's real process object right away
+var process$1 = commonjsGlobal.process;
+
+const processOk = function (process) {
+  return process &&
+    typeof process === 'object' &&
+    typeof process.removeListener === 'function' &&
+    typeof process.emit === 'function' &&
+    typeof process.reallyExit === 'function' &&
+    typeof process.listeners === 'function' &&
+    typeof process.kill === 'function' &&
+    typeof process.pid === 'number' &&
+    typeof process.on === 'function'
+};
+
+// some kind of non-node environment, just no-op
+/* istanbul ignore if */
+if (!processOk(process$1)) {
+  signalExit$1.exports = function () {
+    return function () {}
+  };
+} else {
+  var assert = require$$0$7;
+  var signals = requireSignals();
+  var isWin = /^win/i.test(process$1.platform);
+
+  var EE = require$$2$3;
+  /* istanbul ignore if */
+  if (typeof EE !== 'function') {
+    EE = EE.EventEmitter;
+  }
+
+  var emitter;
+  if (process$1.__signal_exit_emitter__) {
+    emitter = process$1.__signal_exit_emitter__;
+  } else {
+    emitter = process$1.__signal_exit_emitter__ = new EE();
+    emitter.count = 0;
+    emitter.emitted = {};
+  }
+
+  // Because this emitter is a global, we have to check to see if a
+  // previous version of this library failed to enable infinite listeners.
+  // I know what you're about to say.  But literally everything about
+  // signal-exit is a compromise with evil.  Get used to it.
+  if (!emitter.infinite) {
+    emitter.setMaxListeners(Infinity);
+    emitter.infinite = true;
+  }
+
+  signalExit$1.exports = function (cb, opts) {
+    /* istanbul ignore if */
+    if (!processOk(commonjsGlobal.process)) {
+      return function () {}
+    }
+    assert.equal(typeof cb, 'function', 'a callback must be provided for exit handler');
+
+    if (loaded === false) {
+      load();
+    }
+
+    var ev = 'exit';
+    if (opts && opts.alwaysLast) {
+      ev = 'afterexit';
+    }
+
+    var remove = function () {
+      emitter.removeListener(ev, cb);
+      if (emitter.listeners('exit').length === 0 &&
+          emitter.listeners('afterexit').length === 0) {
+        unload();
+      }
+    };
+    emitter.on(ev, cb);
+
+    return remove
+  };
+
+  var unload = function unload () {
+    if (!loaded || !processOk(commonjsGlobal.process)) {
+      return
+    }
+    loaded = false;
+
+    signals.forEach(function (sig) {
+      try {
+        process$1.removeListener(sig, sigListeners[sig]);
+      } catch (er) {}
+    });
+    process$1.emit = originalProcessEmit;
+    process$1.reallyExit = originalProcessReallyExit;
+    emitter.count -= 1;
+  };
+  signalExit$1.exports.unload = unload;
+
+  var emit = function emit (event, code, signal) {
+    /* istanbul ignore if */
+    if (emitter.emitted[event]) {
+      return
+    }
+    emitter.emitted[event] = true;
+    emitter.emit(event, code, signal);
+  };
+
+  // { <signal>: <listener fn>, ... }
+  var sigListeners = {};
+  signals.forEach(function (sig) {
+    sigListeners[sig] = function listener () {
+      /* istanbul ignore if */
+      if (!processOk(commonjsGlobal.process)) {
+        return
+      }
+      // If there are no other listeners, an exit is coming!
+      // Simplest way: remove us and then re-send the signal.
+      // We know that this will kill the process, so we can
+      // safely emit now.
+      var listeners = process$1.listeners(sig);
+      if (listeners.length === emitter.count) {
+        unload();
+        emit('exit', null, sig);
+        /* istanbul ignore next */
+        emit('afterexit', null, sig);
+        /* istanbul ignore next */
+        if (isWin && sig === 'SIGHUP') {
+          // "SIGHUP" throws an `ENOSYS` error on Windows,
+          // so use a supported signal instead
+          sig = 'SIGINT';
+        }
+        /* istanbul ignore next */
+        process$1.kill(process$1.pid, sig);
+      }
+    };
+  });
+
+  signalExit$1.exports.signals = function () {
+    return signals
+  };
+
+  var loaded = false;
+
+  var load = function load () {
+    if (loaded || !processOk(commonjsGlobal.process)) {
+      return
+    }
+    loaded = true;
+
+    // This is the number of onSignalExit's that are in play.
+    // It's important so that we can count the correct number of
+    // listeners on signals, and don't wait for the other one to
+    // handle it instead of us.
+    emitter.count += 1;
+
+    signals = signals.filter(function (sig) {
+      try {
+        process$1.on(sig, sigListeners[sig]);
+        return true
+      } catch (er) {
+        return false
+      }
+    });
+
+    process$1.emit = processEmit;
+    process$1.reallyExit = processReallyExit;
+  };
+  signalExit$1.exports.load = load;
+
+  var originalProcessReallyExit = process$1.reallyExit;
+  var processReallyExit = function processReallyExit (code) {
+    /* istanbul ignore if */
+    if (!processOk(commonjsGlobal.process)) {
+      return
+    }
+    process$1.exitCode = code || /* istanbul ignore next */ 0;
+    emit('exit', process$1.exitCode, null);
+    /* istanbul ignore next */
+    emit('afterexit', process$1.exitCode, null);
+    /* istanbul ignore next */
+    originalProcessReallyExit.call(process$1, process$1.exitCode);
+  };
+
+  var originalProcessEmit = process$1.emit;
+  var processEmit = function processEmit (ev, arg) {
+    if (ev === 'exit' && processOk(commonjsGlobal.process)) {
+      /* istanbul ignore else */
+      if (arg !== undefined) {
+        process$1.exitCode = arg;
+      }
+      var ret = originalProcessEmit.apply(this, arguments);
+      /* istanbul ignore next */
+      emit('exit', process$1.exitCode, null);
+      /* istanbul ignore next */
+      emit('afterexit', process$1.exitCode, null);
+      /* istanbul ignore next */
+      return ret
+    } else {
+      return originalProcessEmit.apply(this, arguments)
+    }
+  };
+}
+
+var signalExitExports = signalExit$1.exports;
+var signalExit = /*@__PURE__*/getDefaultExportFromCjs(signalExitExports);
+
+const restoreCursor = onetime$1(() => {
+	signalExit(() => {
+		process$5.stderr.write('\u001B[?25h');
+	}, {alwaysLast: true});
+});
+
+let isHidden = false;
+
+const cliCursor = {};
+
+cliCursor.show = (writableStream = process$5.stderr) => {
+	if (!writableStream.isTTY) {
+		return;
+	}
+
+	isHidden = false;
+	writableStream.write('\u001B[?25h');
+};
+
+cliCursor.hide = (writableStream = process$5.stderr) => {
+	if (!writableStream.isTTY) {
+		return;
+	}
+
+	restoreCursor();
+	isHidden = true;
+	writableStream.write('\u001B[?25l');
+};
+
+cliCursor.toggle = (force, writableStream) => {
+	if (force !== undefined) {
+		isHidden = force;
+	}
+
+	if (isHidden) {
+		cliCursor.show(writableStream);
+	} else {
+		cliCursor.hide(writableStream);
+	}
+};
+
+const logSymbols = {
+	info: 'ℹ️',
+	success: '✅',
+	warning: '⚠️',
+	error: '❌️',
+};
+
+function ansiRegex({onlyFirst = false} = {}) {
+	const pattern = [
+	    '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
+		'(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))'
+	].join('|');
+
+	return new RegExp(pattern, onlyFirst ? undefined : 'g');
+}
+
+const regex = ansiRegex();
+
+function stripAnsi(string) {
+	if (typeof string !== 'string') {
+		throw new TypeError(`Expected a \`string\`, got \`${typeof string}\``);
+	}
+
+	// Even though the regex is global, we don't need to reset the `.lastIndex`
+	// because unlike `.exec()` and `.test()`, `.replace()` does it automatically
+	// and doing it manually has a performance penalty.
+	return string.replace(regex, '');
+}
+
+// Generated code.
+
+function isAmbiguous(x) {
+	return x === 0xA1
+		|| x === 0xA4
+		|| x === 0xA7
+		|| x === 0xA8
+		|| x === 0xAA
+		|| x === 0xAD
+		|| x === 0xAE
+		|| x >= 0xB0 && x <= 0xB4
+		|| x >= 0xB6 && x <= 0xBA
+		|| x >= 0xBC && x <= 0xBF
+		|| x === 0xC6
+		|| x === 0xD0
+		|| x === 0xD7
+		|| x === 0xD8
+		|| x >= 0xDE && x <= 0xE1
+		|| x === 0xE6
+		|| x >= 0xE8 && x <= 0xEA
+		|| x === 0xEC
+		|| x === 0xED
+		|| x === 0xF0
+		|| x === 0xF2
+		|| x === 0xF3
+		|| x >= 0xF7 && x <= 0xFA
+		|| x === 0xFC
+		|| x === 0xFE
+		|| x === 0x101
+		|| x === 0x111
+		|| x === 0x113
+		|| x === 0x11B
+		|| x === 0x126
+		|| x === 0x127
+		|| x === 0x12B
+		|| x >= 0x131 && x <= 0x133
+		|| x === 0x138
+		|| x >= 0x13F && x <= 0x142
+		|| x === 0x144
+		|| x >= 0x148 && x <= 0x14B
+		|| x === 0x14D
+		|| x === 0x152
+		|| x === 0x153
+		|| x === 0x166
+		|| x === 0x167
+		|| x === 0x16B
+		|| x === 0x1CE
+		|| x === 0x1D0
+		|| x === 0x1D2
+		|| x === 0x1D4
+		|| x === 0x1D6
+		|| x === 0x1D8
+		|| x === 0x1DA
+		|| x === 0x1DC
+		|| x === 0x251
+		|| x === 0x261
+		|| x === 0x2C4
+		|| x === 0x2C7
+		|| x >= 0x2C9 && x <= 0x2CB
+		|| x === 0x2CD
+		|| x === 0x2D0
+		|| x >= 0x2D8 && x <= 0x2DB
+		|| x === 0x2DD
+		|| x === 0x2DF
+		|| x >= 0x300 && x <= 0x36F
+		|| x >= 0x391 && x <= 0x3A1
+		|| x >= 0x3A3 && x <= 0x3A9
+		|| x >= 0x3B1 && x <= 0x3C1
+		|| x >= 0x3C3 && x <= 0x3C9
+		|| x === 0x401
+		|| x >= 0x410 && x <= 0x44F
+		|| x === 0x451
+		|| x === 0x2010
+		|| x >= 0x2013 && x <= 0x2016
+		|| x === 0x2018
+		|| x === 0x2019
+		|| x === 0x201C
+		|| x === 0x201D
+		|| x >= 0x2020 && x <= 0x2022
+		|| x >= 0x2024 && x <= 0x2027
+		|| x === 0x2030
+		|| x === 0x2032
+		|| x === 0x2033
+		|| x === 0x2035
+		|| x === 0x203B
+		|| x === 0x203E
+		|| x === 0x2074
+		|| x === 0x207F
+		|| x >= 0x2081 && x <= 0x2084
+		|| x === 0x20AC
+		|| x === 0x2103
+		|| x === 0x2105
+		|| x === 0x2109
+		|| x === 0x2113
+		|| x === 0x2116
+		|| x === 0x2121
+		|| x === 0x2122
+		|| x === 0x2126
+		|| x === 0x212B
+		|| x === 0x2153
+		|| x === 0x2154
+		|| x >= 0x215B && x <= 0x215E
+		|| x >= 0x2160 && x <= 0x216B
+		|| x >= 0x2170 && x <= 0x2179
+		|| x === 0x2189
+		|| x >= 0x2190 && x <= 0x2199
+		|| x === 0x21B8
+		|| x === 0x21B9
+		|| x === 0x21D2
+		|| x === 0x21D4
+		|| x === 0x21E7
+		|| x === 0x2200
+		|| x === 0x2202
+		|| x === 0x2203
+		|| x === 0x2207
+		|| x === 0x2208
+		|| x === 0x220B
+		|| x === 0x220F
+		|| x === 0x2211
+		|| x === 0x2215
+		|| x === 0x221A
+		|| x >= 0x221D && x <= 0x2220
+		|| x === 0x2223
+		|| x === 0x2225
+		|| x >= 0x2227 && x <= 0x222C
+		|| x === 0x222E
+		|| x >= 0x2234 && x <= 0x2237
+		|| x === 0x223C
+		|| x === 0x223D
+		|| x === 0x2248
+		|| x === 0x224C
+		|| x === 0x2252
+		|| x === 0x2260
+		|| x === 0x2261
+		|| x >= 0x2264 && x <= 0x2267
+		|| x === 0x226A
+		|| x === 0x226B
+		|| x === 0x226E
+		|| x === 0x226F
+		|| x === 0x2282
+		|| x === 0x2283
+		|| x === 0x2286
+		|| x === 0x2287
+		|| x === 0x2295
+		|| x === 0x2299
+		|| x === 0x22A5
+		|| x === 0x22BF
+		|| x === 0x2312
+		|| x >= 0x2460 && x <= 0x24E9
+		|| x >= 0x24EB && x <= 0x254B
+		|| x >= 0x2550 && x <= 0x2573
+		|| x >= 0x2580 && x <= 0x258F
+		|| x >= 0x2592 && x <= 0x2595
+		|| x === 0x25A0
+		|| x === 0x25A1
+		|| x >= 0x25A3 && x <= 0x25A9
+		|| x === 0x25B2
+		|| x === 0x25B3
+		|| x === 0x25B6
+		|| x === 0x25B7
+		|| x === 0x25BC
+		|| x === 0x25BD
+		|| x === 0x25C0
+		|| x === 0x25C1
+		|| x >= 0x25C6 && x <= 0x25C8
+		|| x === 0x25CB
+		|| x >= 0x25CE && x <= 0x25D1
+		|| x >= 0x25E2 && x <= 0x25E5
+		|| x === 0x25EF
+		|| x === 0x2605
+		|| x === 0x2606
+		|| x === 0x2609
+		|| x === 0x260E
+		|| x === 0x260F
+		|| x === 0x261C
+		|| x === 0x261E
+		|| x === 0x2640
+		|| x === 0x2642
+		|| x === 0x2660
+		|| x === 0x2661
+		|| x >= 0x2663 && x <= 0x2665
+		|| x >= 0x2667 && x <= 0x266A
+		|| x === 0x266C
+		|| x === 0x266D
+		|| x === 0x266F
+		|| x === 0x269E
+		|| x === 0x269F
+		|| x === 0x26BF
+		|| x >= 0x26C6 && x <= 0x26CD
+		|| x >= 0x26CF && x <= 0x26D3
+		|| x >= 0x26D5 && x <= 0x26E1
+		|| x === 0x26E3
+		|| x === 0x26E8
+		|| x === 0x26E9
+		|| x >= 0x26EB && x <= 0x26F1
+		|| x === 0x26F4
+		|| x >= 0x26F6 && x <= 0x26F9
+		|| x === 0x26FB
+		|| x === 0x26FC
+		|| x === 0x26FE
+		|| x === 0x26FF
+		|| x === 0x273D
+		|| x >= 0x2776 && x <= 0x277F
+		|| x >= 0x2B56 && x <= 0x2B59
+		|| x >= 0x3248 && x <= 0x324F
+		|| x >= 0xE000 && x <= 0xF8FF
+		|| x >= 0xFE00 && x <= 0xFE0F
+		|| x === 0xFFFD
+		|| x >= 0x1F100 && x <= 0x1F10A
+		|| x >= 0x1F110 && x <= 0x1F12D
+		|| x >= 0x1F130 && x <= 0x1F169
+		|| x >= 0x1F170 && x <= 0x1F18D
+		|| x === 0x1F18F
+		|| x === 0x1F190
+		|| x >= 0x1F19B && x <= 0x1F1AC
+		|| x >= 0xE0100 && x <= 0xE01EF
+		|| x >= 0xF0000 && x <= 0xFFFFD
+		|| x >= 0x100000 && x <= 0x10FFFD;
+}
+
+function isFullWidth(x) {
+	return x === 0x3000
+		|| x >= 0xFF01 && x <= 0xFF60
+		|| x >= 0xFFE0 && x <= 0xFFE6;
+}
+
+function isWide(x) {
+	return x >= 0x1100 && x <= 0x115F
+		|| x === 0x231A
+		|| x === 0x231B
+		|| x === 0x2329
+		|| x === 0x232A
+		|| x >= 0x23E9 && x <= 0x23EC
+		|| x === 0x23F0
+		|| x === 0x23F3
+		|| x === 0x25FD
+		|| x === 0x25FE
+		|| x === 0x2614
+		|| x === 0x2615
+		|| x >= 0x2648 && x <= 0x2653
+		|| x === 0x267F
+		|| x === 0x2693
+		|| x === 0x26A1
+		|| x === 0x26AA
+		|| x === 0x26AB
+		|| x === 0x26BD
+		|| x === 0x26BE
+		|| x === 0x26C4
+		|| x === 0x26C5
+		|| x === 0x26CE
+		|| x === 0x26D4
+		|| x === 0x26EA
+		|| x === 0x26F2
+		|| x === 0x26F3
+		|| x === 0x26F5
+		|| x === 0x26FA
+		|| x === 0x26FD
+		|| x === 0x2705
+		|| x === 0x270A
+		|| x === 0x270B
+		|| x === 0x2728
+		|| x === 0x274C
+		|| x === 0x274E
+		|| x >= 0x2753 && x <= 0x2755
+		|| x === 0x2757
+		|| x >= 0x2795 && x <= 0x2797
+		|| x === 0x27B0
+		|| x === 0x27BF
+		|| x === 0x2B1B
+		|| x === 0x2B1C
+		|| x === 0x2B50
+		|| x === 0x2B55
+		|| x >= 0x2E80 && x <= 0x2E99
+		|| x >= 0x2E9B && x <= 0x2EF3
+		|| x >= 0x2F00 && x <= 0x2FD5
+		|| x >= 0x2FF0 && x <= 0x2FFF
+		|| x >= 0x3001 && x <= 0x303E
+		|| x >= 0x3041 && x <= 0x3096
+		|| x >= 0x3099 && x <= 0x30FF
+		|| x >= 0x3105 && x <= 0x312F
+		|| x >= 0x3131 && x <= 0x318E
+		|| x >= 0x3190 && x <= 0x31E3
+		|| x >= 0x31EF && x <= 0x321E
+		|| x >= 0x3220 && x <= 0x3247
+		|| x >= 0x3250 && x <= 0x4DBF
+		|| x >= 0x4E00 && x <= 0xA48C
+		|| x >= 0xA490 && x <= 0xA4C6
+		|| x >= 0xA960 && x <= 0xA97C
+		|| x >= 0xAC00 && x <= 0xD7A3
+		|| x >= 0xF900 && x <= 0xFAFF
+		|| x >= 0xFE10 && x <= 0xFE19
+		|| x >= 0xFE30 && x <= 0xFE52
+		|| x >= 0xFE54 && x <= 0xFE66
+		|| x >= 0xFE68 && x <= 0xFE6B
+		|| x >= 0x16FE0 && x <= 0x16FE4
+		|| x === 0x16FF0
+		|| x === 0x16FF1
+		|| x >= 0x17000 && x <= 0x187F7
+		|| x >= 0x18800 && x <= 0x18CD5
+		|| x >= 0x18D00 && x <= 0x18D08
+		|| x >= 0x1AFF0 && x <= 0x1AFF3
+		|| x >= 0x1AFF5 && x <= 0x1AFFB
+		|| x === 0x1AFFD
+		|| x === 0x1AFFE
+		|| x >= 0x1B000 && x <= 0x1B122
+		|| x === 0x1B132
+		|| x >= 0x1B150 && x <= 0x1B152
+		|| x === 0x1B155
+		|| x >= 0x1B164 && x <= 0x1B167
+		|| x >= 0x1B170 && x <= 0x1B2FB
+		|| x === 0x1F004
+		|| x === 0x1F0CF
+		|| x === 0x1F18E
+		|| x >= 0x1F191 && x <= 0x1F19A
+		|| x >= 0x1F200 && x <= 0x1F202
+		|| x >= 0x1F210 && x <= 0x1F23B
+		|| x >= 0x1F240 && x <= 0x1F248
+		|| x === 0x1F250
+		|| x === 0x1F251
+		|| x >= 0x1F260 && x <= 0x1F265
+		|| x >= 0x1F300 && x <= 0x1F320
+		|| x >= 0x1F32D && x <= 0x1F335
+		|| x >= 0x1F337 && x <= 0x1F37C
+		|| x >= 0x1F37E && x <= 0x1F393
+		|| x >= 0x1F3A0 && x <= 0x1F3CA
+		|| x >= 0x1F3CF && x <= 0x1F3D3
+		|| x >= 0x1F3E0 && x <= 0x1F3F0
+		|| x === 0x1F3F4
+		|| x >= 0x1F3F8 && x <= 0x1F43E
+		|| x === 0x1F440
+		|| x >= 0x1F442 && x <= 0x1F4FC
+		|| x >= 0x1F4FF && x <= 0x1F53D
+		|| x >= 0x1F54B && x <= 0x1F54E
+		|| x >= 0x1F550 && x <= 0x1F567
+		|| x === 0x1F57A
+		|| x === 0x1F595
+		|| x === 0x1F596
+		|| x === 0x1F5A4
+		|| x >= 0x1F5FB && x <= 0x1F64F
+		|| x >= 0x1F680 && x <= 0x1F6C5
+		|| x === 0x1F6CC
+		|| x >= 0x1F6D0 && x <= 0x1F6D2
+		|| x >= 0x1F6D5 && x <= 0x1F6D7
+		|| x >= 0x1F6DC && x <= 0x1F6DF
+		|| x === 0x1F6EB
+		|| x === 0x1F6EC
+		|| x >= 0x1F6F4 && x <= 0x1F6FC
+		|| x >= 0x1F7E0 && x <= 0x1F7EB
+		|| x === 0x1F7F0
+		|| x >= 0x1F90C && x <= 0x1F93A
+		|| x >= 0x1F93C && x <= 0x1F945
+		|| x >= 0x1F947 && x <= 0x1F9FF
+		|| x >= 0x1FA70 && x <= 0x1FA7C
+		|| x >= 0x1FA80 && x <= 0x1FA88
+		|| x >= 0x1FA90 && x <= 0x1FABD
+		|| x >= 0x1FABF && x <= 0x1FAC5
+		|| x >= 0x1FACE && x <= 0x1FADB
+		|| x >= 0x1FAE0 && x <= 0x1FAE8
+		|| x >= 0x1FAF0 && x <= 0x1FAF8
+		|| x >= 0x20000 && x <= 0x2FFFD
+		|| x >= 0x30000 && x <= 0x3FFFD;
+}
+
+function validate(codePoint) {
+	if (!Number.isSafeInteger(codePoint)) {
+		throw new TypeError(`Expected a code point, got \`${typeof codePoint}\`.`);
+	}
+}
+
+function eastAsianWidth(codePoint, {ambiguousAsWide = false} = {}) {
+	validate(codePoint);
+
+	if (
+		isFullWidth(codePoint)
+		|| isWide(codePoint)
+		|| (ambiguousAsWide && isAmbiguous(codePoint))
+	) {
+		return 2;
+	}
+
+	return 1;
+}
+
+var emojiRegex = () => {
+	// https://mths.be/emoji
+	return /[#*0-9]\uFE0F?\u20E3|[\xA9\xAE\u203C\u2049\u2122\u2139\u2194-\u2199\u21A9\u21AA\u231A\u231B\u2328\u23CF\u23ED-\u23EF\u23F1\u23F2\u23F8-\u23FA\u24C2\u25AA\u25AB\u25B6\u25C0\u25FB\u25FC\u25FE\u2600-\u2604\u260E\u2611\u2614\u2615\u2618\u2620\u2622\u2623\u2626\u262A\u262E\u262F\u2638-\u263A\u2640\u2642\u2648-\u2653\u265F\u2660\u2663\u2665\u2666\u2668\u267B\u267E\u267F\u2692\u2694-\u2697\u2699\u269B\u269C\u26A0\u26A7\u26AA\u26B0\u26B1\u26BD\u26BE\u26C4\u26C8\u26CF\u26D1\u26E9\u26F0-\u26F5\u26F7\u26F8\u26FA\u2702\u2708\u2709\u270F\u2712\u2714\u2716\u271D\u2721\u2733\u2734\u2744\u2747\u2757\u2763\u27A1\u2934\u2935\u2B05-\u2B07\u2B1B\u2B1C\u2B55\u3030\u303D\u3297\u3299]\uFE0F?|[\u261D\u270C\u270D](?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?|[\u270A\u270B](?:\uD83C[\uDFFB-\uDFFF])?|[\u23E9-\u23EC\u23F0\u23F3\u25FD\u2693\u26A1\u26AB\u26C5\u26CE\u26D4\u26EA\u26FD\u2705\u2728\u274C\u274E\u2753-\u2755\u2795-\u2797\u27B0\u27BF\u2B50]|\u26D3\uFE0F?(?:\u200D\uD83D\uDCA5)?|\u26F9(?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|\u2764\uFE0F?(?:\u200D(?:\uD83D\uDD25|\uD83E\uDE79))?|\uD83C(?:[\uDC04\uDD70\uDD71\uDD7E\uDD7F\uDE02\uDE37\uDF21\uDF24-\uDF2C\uDF36\uDF7D\uDF96\uDF97\uDF99-\uDF9B\uDF9E\uDF9F\uDFCD\uDFCE\uDFD4-\uDFDF\uDFF5\uDFF7]\uFE0F?|[\uDF85\uDFC2\uDFC7](?:\uD83C[\uDFFB-\uDFFF])?|[\uDFC4\uDFCA](?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDFCB\uDFCC](?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDCCF\uDD8E\uDD91-\uDD9A\uDE01\uDE1A\uDE2F\uDE32-\uDE36\uDE38-\uDE3A\uDE50\uDE51\uDF00-\uDF20\uDF2D-\uDF35\uDF37-\uDF43\uDF45-\uDF4A\uDF4C-\uDF7C\uDF7E-\uDF84\uDF86-\uDF93\uDFA0-\uDFC1\uDFC5\uDFC6\uDFC8\uDFC9\uDFCF-\uDFD3\uDFE0-\uDFF0\uDFF8-\uDFFF]|\uDDE6\uD83C[\uDDE8-\uDDEC\uDDEE\uDDF1\uDDF2\uDDF4\uDDF6-\uDDFA\uDDFC\uDDFD\uDDFF]|\uDDE7\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEF\uDDF1-\uDDF4\uDDF6-\uDDF9\uDDFB\uDDFC\uDDFE\uDDFF]|\uDDE8\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDEE\uDDF0-\uDDF5\uDDF7\uDDFA-\uDDFF]|\uDDE9\uD83C[\uDDEA\uDDEC\uDDEF\uDDF0\uDDF2\uDDF4\uDDFF]|\uDDEA\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDED\uDDF7-\uDDFA]|\uDDEB\uD83C[\uDDEE-\uDDF0\uDDF2\uDDF4\uDDF7]|\uDDEC\uD83C[\uDDE6\uDDE7\uDDE9-\uDDEE\uDDF1-\uDDF3\uDDF5-\uDDFA\uDDFC\uDDFE]|\uDDED\uD83C[\uDDF0\uDDF2\uDDF3\uDDF7\uDDF9\uDDFA]|\uDDEE\uD83C[\uDDE8-\uDDEA\uDDF1-\uDDF4\uDDF6-\uDDF9]|\uDDEF\uD83C[\uDDEA\uDDF2\uDDF4\uDDF5]|\uDDF0\uD83C[\uDDEA\uDDEC-\uDDEE\uDDF2\uDDF3\uDDF5\uDDF7\uDDFC\uDDFE\uDDFF]|\uDDF1\uD83C[\uDDE6-\uDDE8\uDDEE\uDDF0\uDDF7-\uDDFB\uDDFE]|\uDDF2\uD83C[\uDDE6\uDDE8-\uDDED\uDDF0-\uDDFF]|\uDDF3\uD83C[\uDDE6\uDDE8\uDDEA-\uDDEC\uDDEE\uDDF1\uDDF4\uDDF5\uDDF7\uDDFA\uDDFF]|\uDDF4\uD83C\uDDF2|\uDDF5\uD83C[\uDDE6\uDDEA-\uDDED\uDDF0-\uDDF3\uDDF7-\uDDF9\uDDFC\uDDFE]|\uDDF6\uD83C\uDDE6|\uDDF7\uD83C[\uDDEA\uDDF4\uDDF8\uDDFA\uDDFC]|\uDDF8\uD83C[\uDDE6-\uDDEA\uDDEC-\uDDF4\uDDF7-\uDDF9\uDDFB\uDDFD-\uDDFF]|\uDDF9\uD83C[\uDDE6\uDDE8\uDDE9\uDDEB-\uDDED\uDDEF-\uDDF4\uDDF7\uDDF9\uDDFB\uDDFC\uDDFF]|\uDDFA\uD83C[\uDDE6\uDDEC\uDDF2\uDDF3\uDDF8\uDDFE\uDDFF]|\uDDFB\uD83C[\uDDE6\uDDE8\uDDEA\uDDEC\uDDEE\uDDF3\uDDFA]|\uDDFC\uD83C[\uDDEB\uDDF8]|\uDDFD\uD83C\uDDF0|\uDDFE\uD83C[\uDDEA\uDDF9]|\uDDFF\uD83C[\uDDE6\uDDF2\uDDFC]|\uDF44(?:\u200D\uD83D\uDFEB)?|\uDF4B(?:\u200D\uD83D\uDFE9)?|\uDFC3(?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D(?:[\u2640\u2642]\uFE0F?(?:\u200D\u27A1\uFE0F?)?|\u27A1\uFE0F?))?|\uDFF3\uFE0F?(?:\u200D(?:\u26A7\uFE0F?|\uD83C\uDF08))?|\uDFF4(?:\u200D\u2620\uFE0F?|\uDB40\uDC67\uDB40\uDC62\uDB40(?:\uDC65\uDB40\uDC6E\uDB40\uDC67|\uDC73\uDB40\uDC63\uDB40\uDC74|\uDC77\uDB40\uDC6C\uDB40\uDC73)\uDB40\uDC7F)?)|\uD83D(?:[\uDC3F\uDCFD\uDD49\uDD4A\uDD6F\uDD70\uDD73\uDD76-\uDD79\uDD87\uDD8A-\uDD8D\uDDA5\uDDA8\uDDB1\uDDB2\uDDBC\uDDC2-\uDDC4\uDDD1-\uDDD3\uDDDC-\uDDDE\uDDE1\uDDE3\uDDE8\uDDEF\uDDF3\uDDFA\uDECB\uDECD-\uDECF\uDEE0-\uDEE5\uDEE9\uDEF0\uDEF3]\uFE0F?|[\uDC42\uDC43\uDC46-\uDC50\uDC66\uDC67\uDC6B-\uDC6D\uDC72\uDC74-\uDC76\uDC78\uDC7C\uDC83\uDC85\uDC8F\uDC91\uDCAA\uDD7A\uDD95\uDD96\uDE4C\uDE4F\uDEC0\uDECC](?:\uD83C[\uDFFB-\uDFFF])?|[\uDC6E\uDC70\uDC71\uDC73\uDC77\uDC81\uDC82\uDC86\uDC87\uDE45-\uDE47\uDE4B\uDE4D\uDE4E\uDEA3\uDEB4\uDEB5](?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDD74\uDD90](?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?|[\uDC00-\uDC07\uDC09-\uDC14\uDC16-\uDC25\uDC27-\uDC3A\uDC3C-\uDC3E\uDC40\uDC44\uDC45\uDC51-\uDC65\uDC6A\uDC79-\uDC7B\uDC7D-\uDC80\uDC84\uDC88-\uDC8E\uDC90\uDC92-\uDCA9\uDCAB-\uDCFC\uDCFF-\uDD3D\uDD4B-\uDD4E\uDD50-\uDD67\uDDA4\uDDFB-\uDE2D\uDE2F-\uDE34\uDE37-\uDE41\uDE43\uDE44\uDE48-\uDE4A\uDE80-\uDEA2\uDEA4-\uDEB3\uDEB7-\uDEBF\uDEC1-\uDEC5\uDED0-\uDED2\uDED5-\uDED7\uDEDC-\uDEDF\uDEEB\uDEEC\uDEF4-\uDEFC\uDFE0-\uDFEB\uDFF0]|\uDC08(?:\u200D\u2B1B)?|\uDC15(?:\u200D\uD83E\uDDBA)?|\uDC26(?:\u200D(?:\u2B1B|\uD83D\uDD25))?|\uDC3B(?:\u200D\u2744\uFE0F?)?|\uDC41\uFE0F?(?:\u200D\uD83D\uDDE8\uFE0F?)?|\uDC68(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D(?:[\uDC68\uDC69]\u200D\uD83D(?:\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?)|[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?)|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]))|\uD83C(?:\uDFFB(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFC-\uDFFF])))?|\uDFFC(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB\uDFFD-\uDFFF])))?|\uDFFD(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])))?|\uDFFE(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB-\uDFFD\uDFFF])))?|\uDFFF(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?\uDC68\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83D\uDC68\uD83C[\uDFFB-\uDFFE])))?))?|\uDC69(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:\uDC8B\u200D\uD83D)?[\uDC68\uDC69]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D(?:[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?|\uDC69\u200D\uD83D(?:\uDC66(?:\u200D\uD83D\uDC66)?|\uDC67(?:\u200D\uD83D[\uDC66\uDC67])?))|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]))|\uD83C(?:\uDFFB(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFC-\uDFFF])))?|\uDFFC(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB\uDFFD-\uDFFF])))?|\uDFFD(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])))?|\uDFFE(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB-\uDFFD\uDFFF])))?|\uDFFF(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D\uD83D(?:[\uDC68\uDC69]|\uDC8B\u200D\uD83D[\uDC68\uDC69])\uD83C[\uDFFB-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83D[\uDC68\uDC69]\uD83C[\uDFFB-\uDFFE])))?))?|\uDC6F(?:\u200D[\u2640\u2642]\uFE0F?)?|\uDD75(?:\uFE0F|\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|\uDE2E(?:\u200D\uD83D\uDCA8)?|\uDE35(?:\u200D\uD83D\uDCAB)?|\uDE36(?:\u200D\uD83C\uDF2B\uFE0F?)?|\uDE42(?:\u200D[\u2194\u2195]\uFE0F?)?|\uDEB6(?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D(?:[\u2640\u2642]\uFE0F?(?:\u200D\u27A1\uFE0F?)?|\u27A1\uFE0F?))?)|\uD83E(?:[\uDD0C\uDD0F\uDD18-\uDD1F\uDD30-\uDD34\uDD36\uDD77\uDDB5\uDDB6\uDDBB\uDDD2\uDDD3\uDDD5\uDEC3-\uDEC5\uDEF0\uDEF2-\uDEF8](?:\uD83C[\uDFFB-\uDFFF])?|[\uDD26\uDD35\uDD37-\uDD39\uDD3D\uDD3E\uDDB8\uDDB9\uDDCD\uDDCF\uDDD4\uDDD6-\uDDDD](?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDDDE\uDDDF](?:\u200D[\u2640\u2642]\uFE0F?)?|[\uDD0D\uDD0E\uDD10-\uDD17\uDD20-\uDD25\uDD27-\uDD2F\uDD3A\uDD3F-\uDD45\uDD47-\uDD76\uDD78-\uDDB4\uDDB7\uDDBA\uDDBC-\uDDCC\uDDD0\uDDE0-\uDDFF\uDE70-\uDE7C\uDE80-\uDE88\uDE90-\uDEBD\uDEBF-\uDEC2\uDECE-\uDEDB\uDEE0-\uDEE8]|\uDD3C(?:\u200D[\u2640\u2642]\uFE0F?|\uD83C[\uDFFB-\uDFFF])?|\uDDCE(?:\uD83C[\uDFFB-\uDFFF])?(?:\u200D(?:[\u2640\u2642]\uFE0F?(?:\u200D\u27A1\uFE0F?)?|\u27A1\uFE0F?))?|\uDDD1(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83E\uDDD1|\uDDD1\u200D\uD83E\uDDD2(?:\u200D\uD83E\uDDD2)?|\uDDD2(?:\u200D\uD83E\uDDD2)?))|\uD83C(?:\uDFFB(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFC-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFC(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB\uDFFD-\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFD(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFE(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB-\uDFFD\uDFFF]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?|\uDFFF(?:\u200D(?:[\u2695\u2696\u2708]\uFE0F?|\u2764\uFE0F?\u200D(?:\uD83D\uDC8B\u200D)?\uD83E\uDDD1\uD83C[\uDFFB-\uDFFE]|\uD83C[\uDF3E\uDF73\uDF7C\uDF84\uDF93\uDFA4\uDFA8\uDFEB\uDFED]|\uD83D[\uDCBB\uDCBC\uDD27\uDD2C\uDE80\uDE92]|\uD83E(?:[\uDDAF\uDDBC\uDDBD](?:\u200D\u27A1\uFE0F?)?|[\uDDB0-\uDDB3]|\uDD1D\u200D\uD83E\uDDD1\uD83C[\uDFFB-\uDFFF])))?))?|\uDEF1(?:\uD83C(?:\uDFFB(?:\u200D\uD83E\uDEF2\uD83C[\uDFFC-\uDFFF])?|\uDFFC(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB\uDFFD-\uDFFF])?|\uDFFD(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB\uDFFC\uDFFE\uDFFF])?|\uDFFE(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB-\uDFFD\uDFFF])?|\uDFFF(?:\u200D\uD83E\uDEF2\uD83C[\uDFFB-\uDFFE])?))?)/g;
+};
+
+const segmenter = new Intl.Segmenter();
+
+const defaultIgnorableCodePointRegex = /^\p{Default_Ignorable_Code_Point}$/u;
+
+function stringWidth(string, options = {}) {
+	if (typeof string !== 'string' || string.length === 0) {
+		return 0;
+	}
+
+	const {
+		ambiguousIsNarrow = true,
+		countAnsiEscapeCodes = false,
+	} = options;
+
+	if (!countAnsiEscapeCodes) {
+		string = stripAnsi(string);
+	}
+
+	if (string.length === 0) {
+		return 0;
+	}
+
+	let width = 0;
+	const eastAsianWidthOptions = {ambiguousAsWide: !ambiguousIsNarrow};
+
+	for (const {segment: character} of segmenter.segment(string)) {
+		const codePoint = character.codePointAt(0);
+
+		// Ignore control characters
+		if (codePoint <= 0x1F || (codePoint >= 0x7F && codePoint <= 0x9F)) {
+			continue;
+		}
+
+		// Ignore zero-width characters
+		if (
+			(codePoint >= 0x20_0B && codePoint <= 0x20_0F) // Zero-width space, non-joiner, joiner, left-to-right mark, right-to-left mark
+			|| codePoint === 0xFE_FF // Zero-width no-break space
+		) {
+			continue;
+		}
+
+		// Ignore combining characters
+		if (
+			(codePoint >= 0x3_00 && codePoint <= 0x3_6F) // Combining diacritical marks
+			|| (codePoint >= 0x1A_B0 && codePoint <= 0x1A_FF) // Combining diacritical marks extended
+			|| (codePoint >= 0x1D_C0 && codePoint <= 0x1D_FF) // Combining diacritical marks supplement
+			|| (codePoint >= 0x20_D0 && codePoint <= 0x20_FF) // Combining diacritical marks for symbols
+			|| (codePoint >= 0xFE_20 && codePoint <= 0xFE_2F) // Combining half marks
+		) {
+			continue;
+		}
+
+		// Ignore surrogate pairs
+		if (codePoint >= 0xD8_00 && codePoint <= 0xDF_FF) {
+			continue;
+		}
+
+		// Ignore variation selectors
+		if (codePoint >= 0xFE_00 && codePoint <= 0xFE_0F) {
+			continue;
+		}
+
+		// This covers some of the above cases, but we still keep them for performance reasons.
+		if (defaultIgnorableCodePointRegex.test(character)) {
+			continue;
+		}
+
+		// TODO: Use `/\p{RGI_Emoji}/v` when targeting Node.js 20.
+		if (emojiRegex().test(character)) {
+			width += 2;
+			continue;
+		}
+
+		width += eastAsianWidth(codePoint, eastAsianWidthOptions);
+	}
+
+	return width;
+}
+
+function isInteractive({stream = process.stdout} = {}) {
+	return Boolean(
+		stream && stream.isTTY &&
+		process.env.TERM !== 'dumb' &&
+		!('CI' in process.env)
+	);
+}
+
+function isUnicodeSupported() {
+	if (process$5.platform !== 'win32') {
+		return process$5.env.TERM !== 'linux'; // Linux console (kernel)
+	}
+
+	return Boolean(process$5.env.WT_SESSION) // Windows Terminal
+		|| Boolean(process$5.env.TERMINUS_SUBLIME) // Terminus (<0.2.27)
+		|| process$5.env.ConEmuTask === '{cmd::Cmder}' // ConEmu and cmder
+		|| process$5.env.TERM_PROGRAM === 'Terminus-Sublime'
+		|| process$5.env.TERM_PROGRAM === 'vscode'
+		|| process$5.env.TERM === 'xterm-256color'
+		|| process$5.env.TERM === 'alacritty'
+		|| process$5.env.TERMINAL_EMULATOR === 'JetBrains-JediTerm';
+}
+
+const ASCII_ETX_CODE = 0x03; // Ctrl+C emits this code
+
+class StdinDiscarder {
+	#activeCount = 0;
+
+	start() {
+		this.#activeCount++;
+
+		if (this.#activeCount === 1) {
+			this.#realStart();
+		}
+	}
+
+	stop() {
+		if (this.#activeCount <= 0) {
+			throw new Error('`stop` called more times than `start`');
+		}
+
+		this.#activeCount--;
+
+		if (this.#activeCount === 0) {
+			this.#realStop();
+		}
+	}
+
+	#realStart() {
+		// No known way to make it work reliably on Windows.
+		if (process$5.platform === 'win32' || !process$5.stdin.isTTY) {
+			return;
+		}
+
+		process$5.stdin.setRawMode(true);
+		process$5.stdin.on('data', this.#handleInput);
+		process$5.stdin.resume();
+	}
+
+	#realStop() {
+		if (!process$5.stdin.isTTY) {
+			return;
+		}
+
+		process$5.stdin.off('data', this.#handleInput);
+		process$5.stdin.pause();
+		process$5.stdin.setRawMode(false);
+	}
+
+	#handleInput(chunk) {
+		// Allow Ctrl+C to gracefully exit.
+		if (chunk[0] === ASCII_ETX_CODE) {
+			process$5.emit('SIGINT');
+		}
+	}
+}
+
+const stdinDiscarder = new StdinDiscarder();
+
+class Ora {
+	#linesToClear = 0;
+	#isDiscardingStdin = false;
+	#lineCount = 0;
+	#frameIndex = 0;
+	#options;
+	#spinner;
+	#stream;
+	#id;
+	#initialInterval;
+	#isEnabled;
+	#isSilent;
+	#indent;
+	#text;
+	#prefixText;
+	#suffixText;
+
+	color;
+
+	constructor(options) {
+		if (typeof options === 'string') {
+			options = {
+				text: options,
+			};
+		}
+
+		this.#options = {
+			color: 'cyan',
+			stream: process$5.stderr,
+			discardStdin: true,
+			hideCursor: true,
+			...options,
+		};
+
+		// Public
+		this.color = this.#options.color;
+
+		// It's important that these use the public setters.
+		this.spinner = this.#options.spinner;
+
+		this.#initialInterval = this.#options.interval;
+		this.#stream = this.#options.stream;
+		this.#isEnabled = typeof this.#options.isEnabled === 'boolean' ? this.#options.isEnabled : isInteractive({stream: this.#stream});
+		this.#isSilent = typeof this.#options.isSilent === 'boolean' ? this.#options.isSilent : false;
+
+		// Set *after* `this.#stream`.
+		// It's important that these use the public setters.
+		this.text = this.#options.text;
+		this.prefixText = this.#options.prefixText;
+		this.suffixText = this.#options.suffixText;
+		this.indent = this.#options.indent;
+
+		if (process$5.env.NODE_ENV === 'test') {
+			this._stream = this.#stream;
+			this._isEnabled = this.#isEnabled;
+
+			Object.defineProperty(this, '_linesToClear', {
+				get() {
+					return this.#linesToClear;
+				},
+				set(newValue) {
+					this.#linesToClear = newValue;
+				},
+			});
+
+			Object.defineProperty(this, '_frameIndex', {
+				get() {
+					return this.#frameIndex;
+				},
+			});
+
+			Object.defineProperty(this, '_lineCount', {
+				get() {
+					return this.#lineCount;
+				},
+			});
+		}
+	}
+
+	get indent() {
+		return this.#indent;
+	}
+
+	set indent(indent = 0) {
+		if (!(indent >= 0 && Number.isInteger(indent))) {
+			throw new Error('The `indent` option must be an integer from 0 and up');
+		}
+
+		this.#indent = indent;
+		this.#updateLineCount();
+	}
+
+	get interval() {
+		return this.#initialInterval ?? this.#spinner.interval ?? 100;
+	}
+
+	get spinner() {
+		return this.#spinner;
+	}
+
+	set spinner(spinner) {
+		this.#frameIndex = 0;
+		this.#initialInterval = undefined;
+
+		if (typeof spinner === 'object') {
+			if (spinner.frames === undefined) {
+				throw new Error('The given spinner must have a `frames` property');
+			}
+
+			this.#spinner = spinner;
+		} else if (!isUnicodeSupported()) {
+			this.#spinner = cliSpinners$1.line;
+		} else if (spinner === undefined) {
+			// Set default spinner
+			this.#spinner = cliSpinners$1.dots;
+		} else if (spinner !== 'default' && cliSpinners$1[spinner]) {
+			this.#spinner = cliSpinners$1[spinner];
+		} else {
+			throw new Error(`There is no built-in spinner named '${spinner}'. See https://github.com/sindresorhus/cli-spinners/blob/main/spinners.json for a full list.`);
+		}
+	}
+
+	get text() {
+		return this.#text;
+	}
+
+	set text(value = '') {
+		this.#text = value;
+		this.#updateLineCount();
+	}
+
+	get prefixText() {
+		return this.#prefixText;
+	}
+
+	set prefixText(value = '') {
+		this.#prefixText = value;
+		this.#updateLineCount();
+	}
+
+	get suffixText() {
+		return this.#suffixText;
+	}
+
+	set suffixText(value = '') {
+		this.#suffixText = value;
+		this.#updateLineCount();
+	}
+
+	get isSpinning() {
+		return this.#id !== undefined;
+	}
+
+	#getFullPrefixText(prefixText = this.#prefixText, postfix = ' ') {
+		if (typeof prefixText === 'string' && prefixText !== '') {
+			return prefixText + postfix;
+		}
+
+		if (typeof prefixText === 'function') {
+			return prefixText() + postfix;
+		}
+
+		return '';
+	}
+
+	#getFullSuffixText(suffixText = this.#suffixText, prefix = ' ') {
+		if (typeof suffixText === 'string' && suffixText !== '') {
+			return prefix + suffixText;
+		}
+
+		if (typeof suffixText === 'function') {
+			return prefix + suffixText();
+		}
+
+		return '';
+	}
+
+	#updateLineCount() {
+		const columns = this.#stream.columns ?? 80;
+		const fullPrefixText = this.#getFullPrefixText(this.#prefixText, '-');
+		const fullSuffixText = this.#getFullSuffixText(this.#suffixText, '-');
+		const fullText = ' '.repeat(this.#indent) + fullPrefixText + '--' + this.#text + '--' + fullSuffixText;
+
+		this.#lineCount = 0;
+		for (const line of stripAnsi(fullText).split('\n')) {
+			this.#lineCount += Math.max(1, Math.ceil(stringWidth(line, {countAnsiEscapeCodes: true}) / columns));
+		}
+	}
+
+	get isEnabled() {
+		return this.#isEnabled && !this.#isSilent;
+	}
+
+	set isEnabled(value) {
+		if (typeof value !== 'boolean') {
+			throw new TypeError('The `isEnabled` option must be a boolean');
+		}
+
+		this.#isEnabled = value;
+	}
+
+	get isSilent() {
+		return this.#isSilent;
+	}
+
+	set isSilent(value) {
+		if (typeof value !== 'boolean') {
+			throw new TypeError('The `isSilent` option must be a boolean');
+		}
+
+		this.#isSilent = value;
+	}
+
+	frame() {
+		const {frames} = this.#spinner;
+		let frame = frames[this.#frameIndex];
+
+		if (this.color) {
+			frame = chalk[this.color](frame);
+		}
+
+		this.#frameIndex = ++this.#frameIndex % frames.length;
+		const fullPrefixText = (typeof this.#prefixText === 'string' && this.#prefixText !== '') ? this.#prefixText + ' ' : '';
+		const fullText = typeof this.text === 'string' ? ' ' + this.text : '';
+		const fullSuffixText = (typeof this.#suffixText === 'string' && this.#suffixText !== '') ? ' ' + this.#suffixText : '';
+
+		return fullPrefixText + frame + fullText + fullSuffixText;
+	}
+
+	clear() {
+		if (!this.#isEnabled || !this.#stream.isTTY) {
+			return this;
+		}
+
+		this.#stream.cursorTo(0);
+
+		for (let index = 0; index < this.#linesToClear; index++) {
+			if (index > 0) {
+				this.#stream.moveCursor(0, -1);
+			}
+
+			this.#stream.clearLine(1);
+		}
+
+		if (this.#indent || this.lastIndent !== this.#indent) {
+			this.#stream.cursorTo(this.#indent);
+		}
+
+		this.lastIndent = this.#indent;
+		this.#linesToClear = 0;
+
+		return this;
+	}
+
+	render() {
+		if (this.#isSilent) {
+			return this;
+		}
+
+		this.clear();
+		this.#stream.write(this.frame());
+		this.#linesToClear = this.#lineCount;
+
+		return this;
+	}
+
+	start(text) {
+		if (text) {
+			this.text = text;
+		}
+
+		if (this.#isSilent) {
+			return this;
+		}
+
+		if (!this.#isEnabled) {
+			if (this.text) {
+				this.#stream.write(`- ${this.text}\n`);
+			}
+
+			return this;
+		}
+
+		if (this.isSpinning) {
+			return this;
+		}
+
+		if (this.#options.hideCursor) {
+			cliCursor.hide(this.#stream);
+		}
+
+		if (this.#options.discardStdin && process$5.stdin.isTTY) {
+			this.#isDiscardingStdin = true;
+			stdinDiscarder.start();
+		}
+
+		this.render();
+		this.#id = setInterval(this.render.bind(this), this.interval);
+
+		return this;
+	}
+
+	stop() {
+		if (!this.#isEnabled) {
+			return this;
+		}
+
+		clearInterval(this.#id);
+		this.#id = undefined;
+		this.#frameIndex = 0;
+		this.clear();
+		if (this.#options.hideCursor) {
+			cliCursor.show(this.#stream);
+		}
+
+		if (this.#options.discardStdin && process$5.stdin.isTTY && this.#isDiscardingStdin) {
+			stdinDiscarder.stop();
+			this.#isDiscardingStdin = false;
+		}
+
+		return this;
+	}
+
+	succeed(text) {
+		return this.stopAndPersist({symbol: logSymbols.success, text});
+	}
+
+	fail(text) {
+		return this.stopAndPersist({symbol: logSymbols.error, text});
+	}
+
+	warn(text) {
+		return this.stopAndPersist({symbol: logSymbols.warning, text});
+	}
+
+	info(text) {
+		return this.stopAndPersist({symbol: logSymbols.info, text});
+	}
+
+	stopAndPersist(options = {}) {
+		if (this.#isSilent) {
+			return this;
+		}
+
+		const prefixText = options.prefixText ?? this.#prefixText;
+		const fullPrefixText = this.#getFullPrefixText(prefixText, ' ');
+
+		const symbolText = options.symbol ?? ' ';
+
+		const text = options.text ?? this.text;
+		const fullText = (typeof text === 'string') ? ' ' + text : '';
+
+		const suffixText = options.suffixText ?? this.#suffixText;
+		const fullSuffixText = this.#getFullSuffixText(suffixText, ' ');
+
+		const textToWrite = fullPrefixText + symbolText + fullText + fullSuffixText + '\n';
+
+		this.stop();
+		this.#stream.write(textToWrite);
+
+		return this;
+	}
+}
+
+function ora(options) {
+	return new Ora(options);
+}
+
 const TEMPLATE_SRC = 'git@github.com:jia8708/Tarobest.git';
 program.executableDir('../src/commands');
 program
@@ -31127,7 +32928,7 @@ program
             type: 'list',
             name: 'css',
             message: '选择哪种CSS预处理器?',
-            choices: ['无', 'Sass', 'Less'],
+            choices: ['None', 'Sass', 'Less'],
         },
         {
             type: 'list',
@@ -31148,52 +32949,68 @@ program
     ];
     inquirer.prompt(prompts).then((answers) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('用户选择:', answers);
+        console.log(chalk.green('这是绿色文本'));
+        const spinner = ora();
+        spinner.start('正在匹配...');
         const localPath = path$2.join(os.tmpdir(), 'taro-repo'); // 使用临时目录作为本地路径
         // 确保 localPath 目录存在  
-        if (!require$$0$6.existsSync(localPath)) {
-            require$$0$6.mkdirSync(localPath, { recursive: true });
+        if (!fs$3.existsSync(localPath)) {
+            fs$3.mkdirSync(localPath, { recursive: true });
         }
         // 定义 checkTemplateInfoMatches 函数以比较 package.json 中的 templateInfo
-        const checkTemplateInfoMatches = (packagePath, answers) => {
-            const packageJson = require(packagePath);
-            const templateInfo = packageJson.templateInfo || {};
-            return Object.keys(answers).every(key => templateInfo[key] === answers[key]);
+        const checkTemplateInfoMatches = (packageJsonObj, answers) => {
+            const templateInfo = packageJsonObj.templateInfo || {};
+            const lists = ['typescript', 'css', 'framework', 'i18n'];
+            for (const list of lists) {
+                if (templateInfo[list] !== answers[list]) {
+                    return false;
+                }
+            }
+            return true;
         };
         // 使用 simpleGit 克隆仓库
         const git = esm_default({ baseDir: localPath });
         try {
             // 克隆仓库，但不检出任何分支
-            yield git.clone(TEMPLATE_SRC, localPath, ['--no-checkout']);
-            // 获取所有分支名称
-            const branches = yield git.branch(['--remote', '--format=%(refname:short)']);
-            const branchNames = branches.all;
-            // 遍历分支并检查 package.json
+            yield git.clone(TEMPLATE_SRC, '.', ['--no-checkout']);
+            const branches = yield git.branch(['--all']);
+            const branchNames = branches.all.map(branch => branch.replace(/^remotes\/origin\//, ''));
+            //遍历分支并检查 package.json
             for (const branch of branchNames) {
                 yield git.checkout(branch);
                 const packageJsonPath = path$2.join(localPath, 'package.json');
-                if (require$$0$6.existsSync(packageJsonPath) && checkTemplateInfoMatches(packageJsonPath, answers)) {
-                    console.log(`找到匹配的分支: ${branch}`);
-                    const targetPath = process.cwd(); // 假设你想克隆到当前工作目录
-                    yield git.clone(TEMPLATE_SRC, targetPath, ['--single-branch', '--branch', branch, '--no-tags']);
-                    console.log(`分支 ${branch} 已克隆到 ${targetPath}`);
-                    return; // 找到匹配的分支后退出循环
+                if (fs$3.existsSync(packageJsonPath)) {
+                    const packageJsonContent = fs$3.readFileSync(packageJsonPath, 'utf8');
+                    const packageJsonObj = JSON.parse(packageJsonContent);
+                    if (checkTemplateInfoMatches(packageJsonObj, answers)) {
+                        spinner.stop();
+                        console.log(chalk.green(`找到匹配的分支: ${branch}`));
+                        spinner.start('正在克隆...');
+                        const targetPath = path$2.join(process.cwd(), `${branch}`); // 假设你想克隆到当前工作目录
+                        yield git.clone(TEMPLATE_SRC, targetPath, ['--single-branch', '--branch', branch, '--no-tags']);
+                        console.log(chalk.green(`分支 ${branch} 已克隆到 ${targetPath}`));
+                        spinner.stop();
+                        return;
+                    }
                 }
-                // 重置工作目录，为下一个分支检查做准备
                 yield git.checkout('HEAD');
                 yield git.reset(['--hard']);
             }
-            console.log('没有找到匹配的分支。');
+            console.log(chalk.red('没有找到匹配的分支。'));
         }
         catch (error) {
-            console.error('发生错误:', error);
+            console.error(chalk.red('发生错误:'), error);
         }
         finally {
+            spinner.stop();
             // 清理临时仓库目录
-            yield git.clean('f');
-            yield git.reset(['--hard']);
+            if (fs$3.existsSync(localPath)) {
+                yield git.clean('f', { cwd: localPath });
+                yield git.reset(['--hard']);
+                // 如果不再需要 localPath，可以删除它  
+                fs$3.rmSync(localPath, { recursive: true, force: true });
+            }
         }
     }));
 }));
-program
-    .command('print', '测试');
 program.parse();
