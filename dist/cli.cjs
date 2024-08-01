@@ -17,6 +17,7 @@ var require$$0$7 = require('buffer');
 var require$$1$3 = require('string_decoder');
 var path$2 = require('path');
 var require$$2$2 = require('crypto');
+var os = require('os');
 
 function _interopNamespaceDefault(e) {
     var n = Object.create(null);
@@ -31116,7 +31117,7 @@ function gitInstanceFactory(baseDir, options) {
 init_git_response_error();
 var esm_default = gitInstanceFactory;
 
-const TEMPLATE_SRC = 'github:NervJS/taro-project-templates#v4.0';
+const TEMPLATE_SRC = 'git@github.com:jia8708/Tarobest.git';
 program.executableDir('../src/commands');
 program
     .command('pull')
@@ -31145,7 +31146,7 @@ program
             message: '是否使用typescript?',
         },
     ];
-    const localPath = path$2.join(process.cwd(), 'taro-repo'); // 使用临时目录作为本地路径
+    const localPath = path$2.join(os.tmpdir(), 'taro-repo'); // 使用临时目录作为本地路径
     // 确保 localPath 目录存在  
     if (!require$$0$6.existsSync(localPath)) {
         require$$0$6.mkdirSync(localPath, { recursive: true });
@@ -31188,7 +31189,7 @@ program
         }
         finally {
             // 清理临时仓库目录
-            yield git.clean('-fdx');
+            yield git.clean();
             yield git.reset(['--hard']);
         }
     }));

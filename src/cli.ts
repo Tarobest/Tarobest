@@ -5,7 +5,7 @@ import path from "path"
 import simpleGit from "simple-git"
 import fs from 'fs'
 
-const TEMPLATE_SRC = 'github:NervJS/taro-project-templates#v4.0'
+const TEMPLATE_SRC = 'git@github.com:jia8708/Tarobest.git'
 
 program.executableDir('../src/commands')
 
@@ -37,6 +37,9 @@ const prompts = [
         message: '是否使用typescript?',
       },
   ];
+  inquirer.prompt(prompts  as any[]).then(async answers => {
+  console.log('用户选择:', answers);
+
   const localPath = path.join(os.tmpdir(), 'taro-repo'); // 使用临时目录作为本地路径
 
    // 确保 localPath 目录存在  
@@ -44,15 +47,12 @@ const prompts = [
     fs.mkdirSync(localPath, { recursive: true });  
   }  
 
-  inquirer.prompt(prompts  as any[]).then(async answers => {
-    console.log('用户选择:', answers);
-
-    // 定义 checkTemplateInfoMatches 函数以比较 package.json 中的 templateInfo
-    const checkTemplateInfoMatches = (packagePath:string, answers:{[x:string]:any}) => {
-      const packageJson = require(packagePath);
-      const templateInfo = packageJson.templateInfo || {};
-      return Object.keys(answers).every(key => templateInfo[key] === answers[key]);
-    };
+// 定义 checkTemplateInfoMatches 函数以比较 package.json 中的 templateInfo
+const checkTemplateInfoMatches = (packagePath:string, answers:{[x:string]:any}) => {
+  const packageJson = require(packagePath);
+  const templateInfo = packageJson.templateInfo || {};
+  return Object.keys(answers).every(key => templateInfo[key] === answers[key]);
+};
 
     // 使用 simpleGit 克隆仓库
     const git = simpleGit({ baseDir: localPath });
@@ -62,7 +62,7 @@ const prompts = [
       await git.clone(TEMPLATE_SRC, localPath, ['--no-checkout']);
 
       // 获取所有分支名称
-      const branches = await git.branch(['--remote', '--format=%(name)']);
+      const branches = await git.branch(['--remote', '--format=%(refname:short)']);
       const branchNames = branches.all;
 
       // 遍历分支并检查 package.json
@@ -83,11 +83,12 @@ const prompts = [
       }
 
       console.log('没有找到匹配的分支。');
+      
     } catch (error) {
       console.error('发生错误:', error);
     } finally {
       // 清理临时仓库目录
-      await git.clean('-fdx');
+      await git.clean('f');
       await git.reset(['--hard']);
     }
   });
