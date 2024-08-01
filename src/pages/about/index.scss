@@ -1,3 +1,42 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+.index {
+  background-color: #173f3f;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vmax;
+}
+.box {
+  text-align: center;
+  padding: 15vmin 10vmin;
+  background-color: #fff;
+  border-radius: 5vmin;
+  color: #66ddf7;
+  font-size: 8vmin;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+.box::before {
+  content: "";
+  width: 200%;
+  height: 300%;
+  background-color: #22292f;
+  position: absolute;
+  left: -50%;
+  top: -100%;
+  background-image: conic-gradient(transparent, #66ddf7, transparent 30%);
+  z-index: -2;
+  animation: rotate 5s linear infinite;
+}
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.box::after {
+  content: "";
+  position: absolute;
+  inset: 1vmin;
+  background-color: #000;
+  border-radius: 4vmin;
+  z-index: -1;
+}
