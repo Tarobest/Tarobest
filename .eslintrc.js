@@ -66,12 +66,12 @@ module.exports = {
           ClassDeclaration: true,
           FunctionExpression: true,
           MethodDefinition: true
-        },
+        }
         // eslint-disable-next-line no-inline-comments
-        contexts: ['TSInterfaceDeclaration'] // 检查接口是否写注释
+        // contexts: ['TSInterfaceDeclaration'] // 检查接口是否写注释
       }
-    ],
-    'no-inline-comments': 'error'
+    ]
+    // 'no-inline-comments': 'error'
   }
   // 'spaced-commit': ['error', 'always']
 }
