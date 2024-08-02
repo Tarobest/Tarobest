@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 // 创建一个 Axios 实例
 const instance = axios.create({
   baseURL: '你的API基础URL',
@@ -26,14 +27,42 @@ instance.interceptors.response.use(
     // 对响应数据做点什么
     console.log('请求成功');
     // 可以在这里隐藏 loading 状态
-    return response;
+    return response.data;
   },
   error => {
     // 对响应错误做点什么
-    console.error('请求失败:', error);
-    // 可以在这里处理错误状态
+    if (error.response) {
+      // 根据返回的HTTP状态码做不同的处理
+      switch (error.response.status) {
+        case 401:
+          // token过期或未授权
+          console.error('Unauthorized! Token may have expired.');
+          // 这里可以添加跳转到登录页面的逻辑
+          break;
+        case 403:
+          console.error('Forbidden! You do not have permission to perform this action.');
+          // 这里可以添加一些权限不足的处理逻辑
+          break;
+        case 404:
+          console.error('Not Found! The requested resource was not found.');
+          // 这里可以添加一些资源未找到的处理逻辑
+          break;
+        // 其他状态码相应处理
+        default:
+          console.error(`[Error]: ${error.response.status} - ${error.response.statusText}`);
+      }
+    } else if (error.request) {
+      // 请求已发出，但没有收到响应
+      console.error('No response received:', error.request);
+    } else {
+      // 发送请求时出了点问题
+      console.error('Error setting up request:', error.message);
+    }
+    // 可以在这里对所有的响应错误统一处理
     return Promise.reject(error);
   }
+
+
 );
 
 // 请求函数
@@ -47,19 +76,8 @@ const request = (options) => {
       })
       .catch(error => {
         // 请求失败处理
-        if (error.response) {
-          // 请求已发出，服务器响应了状态码 2xx 之外的其他状态
-          console.error('服务器拒绝了请求:', error.response.data);
-          reject(error.response.data);
-        } else if (error.request) {
-          // 请求已经发出，但没有收到响应
-          console.error('没有收到响应:', error.request);
-          reject(error.request);
-        } else {
-          // 发生了触发请求错误的问题
-          console.error('触发请求错误:', error.message);
-          reject(error.message);
-        }
+        console.log("失败",error);
+        reject(error);
       });
   });
 };
