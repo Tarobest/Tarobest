@@ -1,11 +1,6 @@
 export default defineAppConfig({
   pages: ['pages/index/index'],
-  subpackages: [
-    {
-      root: 'pages/index',
-      pages: ['index']
-    }
-  ],
+  subPackages: [],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',

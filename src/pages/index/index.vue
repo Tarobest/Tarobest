@@ -6,4 +6,6 @@
 
 <script lang="ts" setup>
 import './index.scss'
+
+const msg = 'hello world'
 </script>
