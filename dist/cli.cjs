@@ -17,8 +17,8 @@ var require$$0$6 = require('buffer');
 var require$$1$3 = require('string_decoder');
 var path$2 = require('path');
 var require$$2$2 = require('crypto');
-var os = require('os');
-var require$$0$7 = require('assert');
+var require$$0$7 = require('os');
+var require$$0$8 = require('assert');
 var require$$2$3 = require('events');
 
 function _interopNamespaceDefault(e) {
@@ -26131,6 +26131,165 @@ function requireBrowser () {
 
 var node = {exports: {}};
 
+var hasFlag;
+var hasRequiredHasFlag;
+
+function requireHasFlag () {
+	if (hasRequiredHasFlag) return hasFlag;
+	hasRequiredHasFlag = 1;
+
+	hasFlag = (flag, argv = process.argv) => {
+		const prefix = flag.startsWith('-') ? '' : (flag.length === 1 ? '-' : '--');
+		const position = argv.indexOf(prefix + flag);
+		const terminatorPosition = argv.indexOf('--');
+		return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
+	};
+	return hasFlag;
+}
+
+var supportsColor_1;
+var hasRequiredSupportsColor;
+
+function requireSupportsColor () {
+	if (hasRequiredSupportsColor) return supportsColor_1;
+	hasRequiredSupportsColor = 1;
+	const os = require$$0$7;
+	const tty = require$$0$4;
+	const hasFlag = requireHasFlag();
+
+	const {env} = process;
+
+	let forceColor;
+	if (hasFlag('no-color') ||
+		hasFlag('no-colors') ||
+		hasFlag('color=false') ||
+		hasFlag('color=never')) {
+		forceColor = 0;
+	} else if (hasFlag('color') ||
+		hasFlag('colors') ||
+		hasFlag('color=true') ||
+		hasFlag('color=always')) {
+		forceColor = 1;
+	}
+
+	if ('FORCE_COLOR' in env) {
+		if (env.FORCE_COLOR === 'true') {
+			forceColor = 1;
+		} else if (env.FORCE_COLOR === 'false') {
+			forceColor = 0;
+		} else {
+			forceColor = env.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env.FORCE_COLOR, 10), 3);
+		}
+	}
+
+	function translateLevel(level) {
+		if (level === 0) {
+			return false;
+		}
+
+		return {
+			level,
+			hasBasic: true,
+			has256: level >= 2,
+			has16m: level >= 3
+		};
+	}
+
+	function supportsColor(haveStream, streamIsTTY) {
+		if (forceColor === 0) {
+			return 0;
+		}
+
+		if (hasFlag('color=16m') ||
+			hasFlag('color=full') ||
+			hasFlag('color=truecolor')) {
+			return 3;
+		}
+
+		if (hasFlag('color=256')) {
+			return 2;
+		}
+
+		if (haveStream && !streamIsTTY && forceColor === undefined) {
+			return 0;
+		}
+
+		const min = forceColor || 0;
+
+		if (env.TERM === 'dumb') {
+			return min;
+		}
+
+		if (process.platform === 'win32') {
+			// Windows 10 build 10586 is the first Windows release that supports 256 colors.
+			// Windows 10 build 14931 is the first release that supports 16m/TrueColor.
+			const osRelease = os.release().split('.');
+			if (
+				Number(osRelease[0]) >= 10 &&
+				Number(osRelease[2]) >= 10586
+			) {
+				return Number(osRelease[2]) >= 14931 ? 3 : 2;
+			}
+
+			return 1;
+		}
+
+		if ('CI' in env) {
+			if (['TRAVIS', 'CIRCLECI', 'APPVEYOR', 'GITLAB_CI', 'GITHUB_ACTIONS', 'BUILDKITE'].some(sign => sign in env) || env.CI_NAME === 'codeship') {
+				return 1;
+			}
+
+			return min;
+		}
+
+		if ('TEAMCITY_VERSION' in env) {
+			return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
+		}
+
+		if (env.COLORTERM === 'truecolor') {
+			return 3;
+		}
+
+		if ('TERM_PROGRAM' in env) {
+			const version = parseInt((env.TERM_PROGRAM_VERSION || '').split('.')[0], 10);
+
+			switch (env.TERM_PROGRAM) {
+				case 'iTerm.app':
+					return version >= 3 ? 3 : 2;
+				case 'Apple_Terminal':
+					return 2;
+				// No default
+			}
+		}
+
+		if (/-256(color)?$/i.test(env.TERM)) {
+			return 2;
+		}
+
+		if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM)) {
+			return 1;
+		}
+
+		if ('COLORTERM' in env) {
+			return 1;
+		}
+
+		return min;
+	}
+
+	function getSupportLevel(stream) {
+		const level = supportsColor(stream, stream && stream.isTTY);
+		return translateLevel(level);
+	}
+
+	supportsColor_1 = {
+		supportsColor: getSupportLevel,
+		stdout: translateLevel(supportsColor(true, tty.isatty(1))),
+		stderr: translateLevel(supportsColor(true, tty.isatty(2)))
+	};
+	return supportsColor_1;
+}
+
 /**
  * Module dependencies.
  */
@@ -26168,7 +26327,7 @@ function requireNode () {
 		try {
 			// Optional dependency (as in, doesn't need to be installed, NOT like optionalDependencies in package.json)
 			// eslint-disable-next-line import/no-extraneous-dependencies
-			const supportsColor = require('supports-color');
+			const supportsColor = requireSupportsColor();
 
 			if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
 				exports.colors = [
@@ -31753,7 +31912,7 @@ if (!processOk(process$1)) {
     return function () {}
   };
 } else {
-  var assert = require$$0$7;
+  var assert = require$$0$8;
   var signals = requireSignals();
   var isWin = /^win/i.test(process$1.platform);
 
@@ -32949,10 +33108,9 @@ program
     ];
     inquirer.prompt(prompts).then((answers) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('用户选择:', answers);
-        console.log(chalk.green('这是绿色文本'));
         const spinner = ora();
         spinner.start('正在匹配...');
-        const localPath = path$2.join(os.tmpdir(), 'taro-repo'); // 使用临时目录作为本地路径
+        const localPath = path$2.join(require$$0$7.tmpdir(), 'taro-repo'); // 使用临时目录作为本地路径
         // 确保 localPath 目录存在  
         if (!fs$3.existsSync(localPath)) {
             fs$3.mkdirSync(localPath, { recursive: true });
@@ -32960,9 +33118,9 @@ program
         // 定义 checkTemplateInfoMatches 函数以比较 package.json 中的 templateInfo
         const checkTemplateInfoMatches = (packageJsonObj, answers) => {
             const templateInfo = packageJsonObj.templateInfo || {};
-            const lists = ['typescript', 'css', 'framework', 'i18n'];
-            for (const list of lists) {
-                if (templateInfo[list] !== answers[list]) {
+            for (const key in answers) {
+                // 检查 templateInfo 中是否存在当前键，并且值是否与 answers 中的值相等
+                if (templateInfo[key] !== answers[key]) {
                     return false;
                 }
             }

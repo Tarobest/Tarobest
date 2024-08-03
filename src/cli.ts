@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { program } from "commander"
 import inquirer from 'inquirer'
 import os from 'os'
@@ -55,10 +56,10 @@ const prompts = [
 // 定义 checkTemplateInfoMatches 函数以比较 package.json 中的 templateInfo
 const checkTemplateInfoMatches = (packageJsonObj:{[x:string]:any}, answers:{[x:string]:any}) => {
   const templateInfo = packageJsonObj.templateInfo || {};
-  const lists=['typescript','css','framework','i18n']
-  for(const list of lists){
-    if(templateInfo[list]!==answers[list]){
-      return false
+  for (const key in answers) {
+    // 检查 templateInfo 中是否存在当前键，并且值是否与 answers 中的值相等
+    if (templateInfo[key] !== answers[key]) {
+      return false;
     }
   }
   return true
