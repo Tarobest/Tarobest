@@ -3,7 +3,7 @@ import Taro, { useLoad } from "@tarojs/taro";
 import { useTranslation } from "react-i18next";
 import CustomTabBar from "../../component/cutom_tab_bar/custom_tab_bar";
 import ReactLogo from "../../component/ReactLogo/ReactLogo";
-import "./index.css";
+import "./index.scss";
 
 export default function Index() {
   const { t } = useTranslation();

@@ -1,0 +1,32 @@
+//  body {
+//     font-family: Arial, sans-serif;
+//     margin: 0;
+//     padding: 0;
+//   }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+header, nav, section, footer {
+  padding: 20px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+/* 小于600px时的样式 */
+@media (max-width: 600px) {
+  header, nav, section, footer {
+    text-align: center;
+  }
+}
+/* 屏幕宽度在600px到1000px之间的样式 */
+@media (min-width: 601px) and (max-width: 1000px) {
+  nav {
+    display: block;
+  }
+}
+/* 屏幕宽度大于1000px时的样式 */
+@media (min-width: 1001px) {
+  section {
+    margin: 0 20px;
+  }
+}
