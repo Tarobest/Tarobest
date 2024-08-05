@@ -11,10 +11,12 @@ import chalk from "chalk"
 
 const TEMPLATE_SRC = 'git@github.com:jia8708/Tarobest.git'
 
-program.executableDir('../src/commands')
+program
+  .name('tarobest')
 
 program
     .command('pull')
+    .description('拉取模板')
     .action(async ()=>{
         
 const prompts = [
