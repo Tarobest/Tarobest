@@ -21,7 +21,7 @@ export default defineConfig(async merge => {
     },
     sourceRoot: 'src',
     outputRoot: 'dist',
-    plugins: [],
+    plugins: ['@tarojs/plugin-platform-h5'],
     defineConstants: {},
     copy: {
       patterns: [],

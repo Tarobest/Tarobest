@@ -2,7 +2,7 @@
   "name": "taro_vue",
   "version": "1.0.0",
   "private": true,
-  "description": "用于实现vue3的taroi模板",
+  "description": "用于实现vue3的taro模板",
   "templateInfo": {
     "name": "default",
     "typescript": true,
@@ -51,7 +51,7 @@
     "@tarojs/helper": "3.6.34",
     "@tarojs/plugin-framework-vue3": "3.6.34",
     "@tarojs/plugin-platform-alipay": "3.6.34",
-    "@tarojs/plugin-platform-h5": "3.6.34",
+    "@tarojs/plugin-platform-h5": "^3.6.34",
     "@tarojs/plugin-platform-harmony-hybrid": "3.6.34",
     "@tarojs/plugin-platform-jd": "3.6.34",
     "@tarojs/plugin-platform-qq": "3.6.34",
