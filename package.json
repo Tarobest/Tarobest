@@ -12,6 +12,7 @@
   "scripts": {
     "lint": "eslint --fix",
     "format": "prettier --write src/",
+    "generate:styles": "unocss --config unocss.config.js",
     "prepare": "husky install",
     "lint:lint-staged": "lint-staged",
     "build:weapp": "taro build --type weapp",
