@@ -2,7 +2,7 @@
   "name": "taro_vue",
   "version": "1.0.0",
   "private": true,
-  "description": "用于实现vue3的taroi模板",
+  "description": "用于实现vue3的taro模板",
   "templateInfo": {
     "name": "default",
     "typescript": true,
