@@ -1,0 +1,12 @@
+{
+  "main": {
+    "login": "登录",
+    "plUsername": "请输入用户名",
+    "plPassword": "请输入密码",
+    "notEmpty": "用户名或密码不能为空！",
+    "home": "首页",
+    "mine": "我的",
+    "example": "示例",
+    "About": "关于"
+  }
+}
