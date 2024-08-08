@@ -7,6 +7,10 @@
     "home": "Home",
     "mine": "mine",
     "example": "example",
-    "About": "About"
+    "About": "About",
+    "Welcome": "Welcome to our website",
+    "contentTitle": "Content",
+    "content": "Here is an introduction to the services. Depending on the width of the screen, the layout of this text will vary.",
+    "changeLanguage": "Change"
   }
 }
