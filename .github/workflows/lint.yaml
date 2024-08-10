@@ -1,29 +1,32 @@
-# 定义工作流名字
-name: pull_request
+name: lint
 
-# 触发条件
-on:
-    # 当有人提交 pull request到master和以vue和react开头的分支时触发
+on: 
     push:
-        branches:
+        branches-ignore: 
             - master
-            - 'vue-*8'
-            - 'react-*8'
+            - react-**
+            - vue-**
+    pull_request:
+        branches: 
+            - master
+            - react-**
+            - vue-**
 
 jobs:
-    createPullRequest:
-        runs-on: ubuntu-latest # 运行环境
+    build:
+        name: lint
+        runs-on: ubuntu-latest
         steps:
-            - name: Checkout code
-              uses: actions/checkout@v4 # 检查代码
-            - name: Create pull request
-              uses: peter-evans/create-pull-request@v6 # 创建 pull request
+            - name: checkout code
+              uses: actions/checkout@v3
               with:
-                  token: ${{ secrets.GITHUB_TOKEN}}
-                  commit-message: "Auto create pull request"
-                  title: "Auto create pull request"
-                  author: ${{ github.actor}}
-                  body: "This is an auto created pull request"
-                  branch: ${{ github.head_ref}}
-
-
+                  fetch-depth: 0 # 获取所有历史记录
+            - name: lint code
+              uses: github/super-linter@v4
+              env:
+                VALIDATE_ALL_CODEBASE: true
+                VALIDATE_JAVASCRIPT_ES: true
+                VALIDATE_HTML: true
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              
+              
