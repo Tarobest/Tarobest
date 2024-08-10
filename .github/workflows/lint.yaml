@@ -1,0 +1,32 @@
+name: lint
+
+on: 
+    push:
+        branches-ignore: 
+            - master
+            - react-**
+            - vue-**
+    pull_request:
+        branches: 
+            - master
+            - react-**
+            - vue-**
+
+jobs:
+    build:
+        name: lint
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0 # 获取所有历史记录
+            - name: lint code
+              uses: github/super-linter@v4
+              env:
+                VALIDATE_ALL_CODEBASE: true
+                VALIDATE_JAVASCRIPT_ES: true
+                VALIDATE_HTML: true
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              
+              
