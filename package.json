@@ -6,7 +6,7 @@
   "templateInfo": {
     "name": "default",
     "typescript": true,
-    "css": "None",
+    "css": "Sass",
     "framework": "React",
     "i18n": false
   },
@@ -96,7 +96,7 @@
     "postcss": "^8.4.18",
     "prettier": "^3.3.2",
     "react-refresh": "^0.11.0",
-    "stylelint": "^14.4.0",
+    "stylelint": "^14.16.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^4.9.5",
