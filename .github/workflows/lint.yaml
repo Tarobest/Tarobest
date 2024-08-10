@@ -1,0 +1,29 @@
+# 定义工作流名字
+name: pull_request
+
+# 触发条件
+on:
+    # 当有人提交 pull request到master和以vue和react开头的分支时触发
+    push:
+        branches:
+            - master
+            - 'vue-*8'
+            - 'react-*8'
+
+jobs:
+    createPullRequest:
+        runs-on: ubuntu-latest # 运行环境
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4 # 检查代码
+            - name: Create pull request
+              uses: peter-evans/create-pull-request@v6 # 创建 pull request
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN}}
+                  commit-message: "Auto create pull request"
+                  title: "Auto create pull request"
+                  author: ${{ github.actor}}
+                  body: "This is an auto created pull request"
+                  branch: ${{ github.head_ref}}
+
+
