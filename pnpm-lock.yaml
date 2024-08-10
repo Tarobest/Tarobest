@@ -59,6 +59,9 @@ importers:
       '@tarojs/taro':
         specifier: 3.6.32
         version: 3.6.32(@tarojs/helper@3.6.32)(@tarojs/runtime@3.6.32(@tarojs/shared@3.6.32))(@types/react@18.3.3)(postcss@8.4.39)
+      axios:
+        specifier: ^1.7.3
+        version: 1.7.3
       husky:
         specifier: ^8.0.0
         version: 8.0.3
@@ -2373,8 +2376,8 @@ packages:
   aws4@1.13.0:
     resolution: {integrity: sha512-3AungXC4I8kKsS9PuS4JH2nc+0bVY/mjgrephHTIi8fpEeGsTHBUJeosp0Wc1myYMElmD0B3Oc4XL/HVJ4PV2g==}
 
-  axios@1.7.2:
-    resolution: {integrity: sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==}
+  axios@1.7.3:
+    resolution: {integrity: sha512-Ar7ND9pU99eJ9GpoGQKhKf58GpUOgnzuaB7ueNQ5BMi0p+LZ5oaEnfF999fAArcTIBwXTCHAmGcHOZJaWPq9Nw==}
 
   babel-helper-evaluate-path@0.5.0:
     resolution: {integrity: sha512-mUh0UhS607bGh5wUMAQfOpt2JX2ThXMtppHRdRU1kL7ZLRWIXxoV2UIV1r2cAeeNeU1M5SB5/RSUgUxrK8yOkA==}
@@ -9529,7 +9532,7 @@ snapshots:
       '@tarojs/service': 3.6.32(@tarojs/shared@3.6.32)(@tarojs/taro@3.6.32(@tarojs/helper@3.6.32)(@tarojs/runtime@3.6.32(@tarojs/shared@3.6.32))(@types/react@18.3.3)(postcss@8.4.39))
       '@tarojs/shared': 3.6.32
       '@tarojs/taro-h5': 3.6.32(@tarojs/components@3.6.32(@tarojs/helper@3.6.32)(@tarojs/runtime@3.6.32(@tarojs/shared@3.6.32))(@types/react@18.3.3)(postcss@8.4.39))(@tarojs/taro@3.6.32(@tarojs/helper@3.6.32)(@tarojs/runtime@3.6.32(@tarojs/shared@3.6.32))(@types/react@18.3.3)(postcss@8.4.39))
-      axios: 1.7.2
+      axios: 1.7.3
       babel-plugin-transform-taroapi: 3.6.32
       base64-js: 1.5.1
       change-case: 4.1.2
@@ -10650,7 +10653,7 @@ snapshots:
 
   aws4@1.13.0: {}
 
-  axios@1.7.2:
+  axios@1.7.3:
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
