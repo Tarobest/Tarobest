@@ -2,7 +2,7 @@ name: lint
 
 on: 
     push:
-        branches-ignore: 
+        branches: 
             - master
             - react-**
             - vue-**
