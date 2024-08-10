@@ -7,6 +7,10 @@
     "home": "首页",
     "mine": "我的",
     "example": "示例",
-    "About": "关于"
+    "About": "关于",
+     "Welcome": "欢迎访问我们的网站",
+    "contentTitle": "内容",
+    "content": "这里是服务内容的介绍。根据屏幕宽度不同，这段文字的布局会有所变化。",
+    "changeLanguage": "切换语言"
   }
 }
