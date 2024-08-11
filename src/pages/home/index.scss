@@ -1,8 +1,8 @@
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
+  max-width: 1200px;
   flex-direction: column;
+  margin: 0 auto;
 }
 
 .header, .section, .footer {
