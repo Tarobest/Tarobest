@@ -1,5 +1,13 @@
 {
   "editor.formatOnSave": true, // 开启保存文件自动格式化代码
   "editor.defaultFormatter": "esbenp.prettier-vscode", // 设置默认的代码格式化工具为 Prettier
-  "eslint.enable": true
+  "eslint.enable": true,
+  "stylelint.enable": true,
+  "stylelint.validate": ["scss", "sass"],
+  "stylelint.snippet": ["scss", "sass"],
+  "stylelint.packageManager": "pnpm",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": "always",
+    "source.fixAll.eslint": "always",
+  }
 }
