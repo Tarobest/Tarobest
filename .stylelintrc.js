@@ -5,12 +5,6 @@ module.exports = {
     'stylelint-config-idiomatic-order'
   ],
   plugins: ['stylelint-order'],
-  overrides: [
-    {
-      files: ['**/*.(html|vue)'],
-      customSyntax: 'postcss-html'
-    }
-  ],
   ignoreFiles: [
     '**/*.js',
     '**/*.ts',

@@ -11,16 +11,16 @@
   margin-bottom: 20px;
 }
 
-@media (max-width: 600px) {
+@media (width <= 600px) {
   .header, .section, .footer {
     text-align: center;
   }
 }
 
-@media (min-width: 601px) and (max-width: 1000px) {
+@media (width >= 601px) and (width <= 1000px) {
 }
 
-@media (min-width: 1001px) {
+@media (width >= 1001px) {
   .section {
     margin: 0 20px;
   }
