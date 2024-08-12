@@ -1,9 +1,11 @@
-import { View, Button } from "@tarojs/components";
-import { useLoad } from "@tarojs/taro";
+import "./index.scss";
+
 import ReactLogo from "../../component/ReactLogo/ReactLogo";
 import TarobestRouter from "../../utils/route/route";
 import Mybutton from "../../component/Button/Button";
-import "./index.scss";
+
+import { useLoad } from "@tarojs/taro";
+import { View } from "@tarojs/components";
 
 export default function Index() {
   useLoad(() => {
