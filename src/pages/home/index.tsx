@@ -1,5 +1,6 @@
-import { useLoad } from "@tarojs/taro";
 import "./index.scss";
+
+import { useLoad } from "@tarojs/taro";
 
 export default function Index() {
   useLoad(() => {

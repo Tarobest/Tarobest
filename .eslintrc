@@ -1,7 +1,13 @@
 {
- 
-  "extends": ["taro/react","plugin:prettier/recommended"],
-  "plugins": ["prettier"],
+
+  "extends": [
+    "taro/react",
+    "plugin:prettier/recommended",
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript"
+  ],
+  "plugins": ["prettier", "import"],
   "rules": {
     "prefer-const":"warn",
     "react/jsx-uses-react": "off",
@@ -21,6 +27,51 @@
     "@typescript-eslint/no-unused-vars": "warn",
     "no-commonjs": "off",
     "import/no-commonjs": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "import/first": 0,
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "index",
+          "sibling",
+          "parent",
+          "internal",
+          "external",
+          "builtin",
+          "object",
+          "type"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "~/**",
+            "group": "external"
+          },
+          {
+            "pattern": "@/**",
+            "group": "index"
+          },
+          {
+            "pattern": "react",
+            "group": "index"
+          },
+          {
+            "pattern": "taro",
+            "group": "index"
+          }
+        ],
+        "newlines-between": "always",
+        "warnOnUnassignedImports": true
+      }
+
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+     },
+    "import/parsers":{
+      "@typescript-eslint/parser": [ ".ts", ".tsx" ]
+    }
   }
 }

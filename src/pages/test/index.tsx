@@ -1,5 +1,6 @@
-import { View, Button } from "@tarojs/components";
 import TarobestRouter from "../../utils/route/route";
+
+import { View, Button } from "@tarojs/components";
 
 export default function () {
   return (
@@ -10,8 +11,7 @@ export default function () {
           const { params, path } = TarobestRouter.getNowRouteinfo();
           console.log("params:", params);
           console.log("path:", path);
-        }}
-      >
+        }}>
         打印路由信息
       </Button>
     </View>
