@@ -60,6 +60,7 @@
     "@tarojs/runtime": "3.6.32",
     "@tarojs/shared": "3.6.32",
     "@tarojs/taro": "3.6.32",
+    "axios": "^1.7.3",
     "husky": "^8.0.0",
     "i18next": "^23.12.1",
     "onchange": "^7.1.0",
