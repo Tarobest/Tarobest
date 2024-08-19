@@ -1,7 +1,9 @@
-import { View, Image, Text } from "@tarojs/components";
+import "./cutom_tab_bar.scss";
+
 import { useState } from "react";
+
+import { View, Image, Text } from "@tarojs/components";
 import Taro, { useLoad } from "@tarojs/taro";
-import "./cutom_tab_bar.css";
 
 function CustomTabBar(props) {
   const Tabpages = ["../home/index", "../about/index"];

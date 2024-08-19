@@ -1,9 +1,12 @@
-import { View } from "@tarojs/components";
-import Taro, { useLoad } from "@tarojs/taro";
-import { useTranslation } from "react-i18next";
+import "./index.scss";
+
 import CustomTabBar from "../../component/cutom_tab_bar/custom_tab_bar";
 import ReactLogo from "../../component/ReactLogo/ReactLogo";
-import "./index.scss";
+
+import { useTranslation } from "react-i18next";
+
+import { View } from "@tarojs/components";
+import Taro, { useLoad } from "@tarojs/taro";
 
 export default function Index() {
   const { t } = useTranslation();

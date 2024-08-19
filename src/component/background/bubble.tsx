@@ -1,5 +1,6 @@
 import { View } from "@tarojs/components";
-import "./bubble.css";
+
+import "./bubble.scss";
 
 const BubbleList = () => {
   const bubbleArray = Array.from({ length: 40 }, (_, index) => {
@@ -8,8 +9,7 @@ const BubbleList = () => {
       <View
         key={index}
         className='bubble'
-        style={{ "--i": randomValue }}
-      ></View>
+        style={{ "--i": randomValue }}></View>
     );
   });
   return (

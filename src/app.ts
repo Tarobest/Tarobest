@@ -1,7 +1,9 @@
 import { PropsWithChildren } from "react";
+
 import Taro, { useLaunch, useUnload } from "@tarojs/taro";
+
 import "./i18n";
-import "./app.css";
+import "./app.scss";
 
 function App({ children }: PropsWithChildren<any>) {
   useLaunch(() => {
