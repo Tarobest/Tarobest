@@ -20,6 +20,7 @@
     "tslib": "^2.6.3"
   },
   "devDependencies": {
+    "rollup": "^4.21.0",
     "@eslint/js": "^9.8.0",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-json": "^6.1.0",

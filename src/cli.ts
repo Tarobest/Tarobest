@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { program } from "commander"
 import inquirer from 'inquirer'
 import os from 'os'
@@ -7,7 +6,7 @@ import simpleGit from "simple-git"
 import fs from 'fs'
 import ora from "ora"
 
-const TEMPLATE_SRC = 'git@github.com:jia8708/Tarobest.git'
+const TEMPLATE_SRC = 'https://github.com/Tarobest/Tarobest.git'
 
 program
   .name('tarobest')
