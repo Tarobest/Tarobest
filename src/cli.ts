@@ -52,8 +52,8 @@ program
 			const localPath = path.join(os.tmpdir(), "tarobest-repo"); // 使用临时目录作为本地路径
 
 			// 确保 localPath 目录存在
-			if (!fs.existsSync(localPath))
-				fs.mkdirSync(localPath, { recursive: true });
+			if (!fs.existsSync(localPath)) fs.mkdirSync(localPath, { recursive: true });
+			
 
 			// 使用 simpleGit 克隆仓库
 			const git = simpleGit({ baseDir: localPath });
