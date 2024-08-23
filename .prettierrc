@@ -1,0 +1,8 @@
+{
+	"printWidth": 74,
+	"tabWidth": 4,
+	"useTabs": true,
+	"trailingComma": "none",
+	"arrowParens": "avoid",
+	"bracketSpacing": true
+}

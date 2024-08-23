@@ -1,13 +1,13 @@
 name: lint
 
-on: 
+on:
     push:
-        branches-ignore: 
+        branches-ignore:
             - master
             - react-**
             - vue-**
     pull_request:
-        branches: 
+        branches:
             - master
             - react-**
             - vue-**
@@ -24,9 +24,7 @@ jobs:
             - name: lint code
               uses: github/super-linter@v4
               env:
-                VALIDATE_ALL_CODEBASE: true
-                VALIDATE_JAVASCRIPT_ES: true
-                VALIDATE_HTML: true
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              
-              
+                  VALIDATE_ALL_CODEBASE: true
+                  VALIDATE_JAVASCRIPT_ES: true
+                  VALIDATE_HTML: true
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
