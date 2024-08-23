@@ -1,14 +1,18 @@
-import { createApp } from 'vue'
-import './app.scss'
+import { createApp } from 'vue';
 
-const App = createApp({
-  /**
-   *
-   */
-  onShow() {
-    console.log('App onShow.')
+import { createI18n } from 'vue-i18n';
+import en from './messages/en.js';
+import zh from './messages/zh.js';
+
+const i18n = createI18n({
+  legacy: false, // 兼容 Vue 2 的选项，Vue 3 中使用 Composition API
+  locale: 'en', // 设置初始语言环境
+  messages: {
+    en,
+    zh
   }
-  // 入口组件不需要实现 render 方法，即使实现了也会被 taro 所覆盖
-})
+});
 
-export default App
+const app = createApp(App);
+app.use(i18n);
+app.mount('#app');
