@@ -39,6 +39,7 @@
 		"typescript-eslint": "^8.0.0"
 	},
 	"bin": {
-		"tarobest": "bin/taro.js"
+		"tarobest": "bin/taro.js",
+    "tb": "bin/taro.js"
 	}
 }
