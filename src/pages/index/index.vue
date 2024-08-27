@@ -16,10 +16,28 @@
   </view>
 
 
+  <view>
+    <h1>{{ $t('hello') }}</h1>
+    <p>{{ $t('welcome') }}</p>
+    <button @click="switchLanguage">Switch Language</button>
+  </view>
+
+
 </template>
 
 <script lang="ts" setup>
 import './index.scss'
 
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n();
+
+function switchLanguage() {
+  if (locale.value === 'en') {
+    locale.value = 'zh';
+  } else {
+    locale.value = 'en';
+  }
+}
 
 </script>
