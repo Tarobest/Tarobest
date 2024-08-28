@@ -1,7 +1,6 @@
 import fs from "fs-extra";
 import { Answers } from "../types/cli";
 import { ROOT_DIR } from "../constants";
-import { print } from "./print";
 import path from "path";
 
 export abstract class Genarate {
@@ -33,10 +32,13 @@ export class GenarateReact extends Genarate {
 	}
 	async genaratePkg() {
 		const { name, description, author } = super.getAnswer();
-		if (fs.existsSync(path.join(super.getRoot(), "package.json"))) {
-			print.green.log(
-				`找到package.json ${path.join(super.getRoot(), "package.json")}`
-			);
+		const PKG = path.join(super.getRoot(), "package.json")
+		if (fs.existsSync(PKG)) {
+			const pkg = await fs.readJson(PKG);
+			pkg.name = name;
+			pkg.description = description;
+			pkg.author = author;
+			await fs.writeJson(PKG, pkg, { spaces: 2 });
 		}
 	}
 	async genaratePages() {}
