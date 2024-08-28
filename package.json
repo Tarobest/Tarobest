@@ -5,6 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "rollup --config --watch",
 		"build": "rollup --config",
 		"lint": "eslint .",
 		"format": "prettier --write ."
