@@ -18,7 +18,7 @@ export const cloneTemplate = async (answers: Answers) => {
 		if (plugin.beforeBuild) await plugin.beforeBuild();
 	});
 	if (!fs.existsSync(temporarilyDir)) {
-		// 创建临时目录
+		// 创建临时目录 
 		await fs.ensureDir(temporarilyDir);
 	} else {
 		print.red.error("项目已存在");
