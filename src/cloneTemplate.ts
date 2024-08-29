@@ -5,7 +5,7 @@ import ora from "ora";
 import { Git } from "./model/git";
 import { ROOT_DIR, TEMPLATE_SRC } from "./constants";
 import { print } from "./model/print";
-import { GenarateReact } from "./model/genarate";
+import { GenarateReact, Genarate } from "./model/genarate";
 import TaroPlugins from "./plugins";
 
 export const cloneTemplate = async (answers: Answers) => {
@@ -55,4 +55,13 @@ async function cloneBranch(git: Git, spinner: ora.Ora, answers: Answers) {
 	} finally {
 		spinner.stop();
 	}
+}
+
+async function genarateTemplate(genarate: Genarate, spinner: ora.Ora) {
+	spinner.start("正在生成模板...");
+	await genarate.genaratePkg();
+	await genarate.genarateWxConfig();
+	await genarate.genaratePages();
+	spinner.stop();
+;
 }

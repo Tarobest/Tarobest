@@ -2,17 +2,38 @@ import typescript from "rollup-plugin-typescript2";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
+// import fs from "fs-extra";
+// import path from "path";
 
+// function resolveMetaPaths() {
+// 	const baseDir = path.resolve(process.cwd(), "src/meta");
+// 	const entries = {};
+// 	const files = fs.readdirSync(baseDir);
+// 	files.forEach(file => {
+// 		if (file.endsWith(".json")) {
+// 			entries["meta/" + file.replace(".json", "")] =
+// 				"./src/meta/" + file;
+// 		}
+// 	});
+// 	return entries;
+// }
+
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-	input: "index.ts", // 入口文件，根据你的项目结构调整
+	input: {
+		index: "index.ts",
+		// ...resolveMetaPaths()
+	}, // 入口文件，根据你的项目结构调整
 	output: {
-		file: "dist/index.cjs", // 输出文件路径
-		format: "cjs" // CommonJS 格式，适用于 Node.js
+		format: "cjs", // CommonJS 格式，适用于 Node.js
+		dir: "dist" // 输出目录
 	},
 	plugins: [
 		json(),
 		resolve({
-			exportConditions: ['node']
+			exportConditions: ["node"]
 		}),
 		commonjs(), // 转换 CommonJS 模块
 		typescript({
