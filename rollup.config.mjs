@@ -2,6 +2,7 @@ import typescript from "rollup-plugin-typescript2";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
+import alias from "@rollup/plugin-alias";
 // import fs from "fs-extra";
 // import path from "path";
 
@@ -32,6 +33,7 @@ export default {
 	},
 	plugins: [
 		json(),
+		alias({ entries: { '@/*': "./src/*" } }),
 		resolve({
 			exportConditions: ["node"]
 		}),
@@ -39,7 +41,7 @@ export default {
 		typescript({
 			// 用 TypeScript 编译 TypeScript 代码
 			tsconfig: "./tsconfig.json", // 指向你的 TypeScript 配置文件
-			clean: true // 让插件在每次构建前清理输出目录
+			clean: true, // 让插件在每次构建前清理输出目录
 		})
 	]
 };
