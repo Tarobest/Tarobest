@@ -8,10 +8,9 @@
 		"module": "ES2022",
 		"moduleResolution": "node",
 		"outDir": "dist",
-		//"module": "ESNext", // rollup需要
 		"importHelpers": true,
 		"typeRoots": ["./node_modules/@types", "./types"],
-		"resolveJsonModule": true
+		"resolveJsonModule": true,
 	},
 	"include": ["src/**/*"]
 }

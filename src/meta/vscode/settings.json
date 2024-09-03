@@ -1,0 +1,13 @@
+{
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "eslint.enable": true,
+    "stylelint.enable": true,
+    "stylelint.validate": ["scss", "sass"],
+    "stylelint.snippet": ["scss", "sass"],
+    "stylelint.packageManager": "pnpm",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.stylelint": "always",
+      "source.fixAll.eslint": "always"
+    }
+}
