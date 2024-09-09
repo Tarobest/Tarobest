@@ -1,12 +1,22 @@
+import { Answers } from "./types/cli"
 import { resolvePlatForm } from "./utils/resolvePlatForm"
 
 
 export interface Config {
-    platform: "macOS" | "Windows" | "Linux" | "other"
+    platform: "macOS" | "Windows" | "Linux" | "other",
+    answers: Answers
+    root: string
 }
 
-export const genarateConfig = () => {
+export const genarateConfig = ({
+answers,root
+}: {
+    answers: Answers,
+    root: string
+}) => {
     return {
-        platform: resolvePlatForm()
+        platform: resolvePlatForm(),
+        answers: answers,
+        root: root
     } as Config
 }

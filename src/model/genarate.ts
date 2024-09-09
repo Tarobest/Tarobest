@@ -1,6 +1,5 @@
 import fs from "fs-extra";
 import { Answers } from "../types/cli";
-import { ROOT_DIR } from "../constants";
 import extensions from "../meta/vscode/extensions.json";
 import prettierignore from "../meta/prettierignore";
 import gitignore from "../meta/gitignore";
@@ -8,31 +7,30 @@ import path from "path";
 import { Config } from "../config";
 import { resolveLineBreak } from "../utils/resolvePlatForm";
 import { HTMLTemplate } from "../meta/html";
+import { commitlintConfig } from "../meta/commitlint.config";
+import prettierConfig from '../meta/prettier.json'
+import eslintConfig from '../meta/eslint.json'
+import { format } from "prettier";
 
 export abstract class Genarate {
-	private _answer: Answers;
-	private _root: string; // 项目根目录
 	private _config: Config;
 	constructor(
 		config: Config,
-		answer: Answers,
-		root: string = path.join(ROOT_DIR, answer.name)
 	) {
-		this._answer = answer as Answers;
-		this._root = root;
 		this._config = config;
 	}
-	getAnswer() {
-		return this._answer;
-	}
-	getRoot() {
-		return this._root;
+
+
+	getConfig() {
+		return this._config;
 	}
 	async ensureNormalFiles() {
-		await genarateExtensions(this._root);
-		await genarateIgnore(this._root, this._config);
-		await genarateEnv(this._root, this._config);
-		await genarateHTML(this._root, this._config, this._answer);
+		await genarateExtensions(this._config.root);
+		await genarateIgnore(this._config.root, this._config);
+		await genarateEnv(this._config.root, this._config);
+		await genarateHTML(this._config.root, this._config, this._config.answers);
+		await genarateCommitlint(this._config.root, this._config);
+		await genaratePrettier(this._config.root, this._config);
 	}
 	abstract genaratePkg(): any;
 	abstract genaratePages(): any;
@@ -87,4 +85,29 @@ async function genarateHTML(
 		title: answer.name
 	});
 	await fs.writeFile(path.join(root, "index.html"), html, "utf-8");
+}
+
+async function genarateCommitlint(root: string, config: Config) {
+	const targetConfig = path.join(root, "commitlint.config.cjs");
+    const commitlint = commitlintConfig
+	const commitlintText = await format(
+		`module.exports = ${JSON.stringify(commitlint, null, 2)}`,
+		{
+			semi: false,
+			parser: "babel",
+		}
+	);
+	await fs.writeFile(targetConfig, commitlintText);
+}
+
+async function genaratePrettier(root: string, config: Config) {
+	const targetConfig = path.join(root, ".prettierrc");
+	const prettier = prettierConfig;
+	await fs.writeJSON(targetConfig, prettier, { spaces: 2 });
+}
+
+async function genarateESLint(root: string, config: Config) {
+	const targetConfig = path.join(root, ".eslintrc");
+	const eslint = eslintConfig;
+	await fs.writeJSON(targetConfig, eslint, { spaces: 2 });
 }
