@@ -14,7 +14,10 @@ export const cloneTemplate = async (answers: Answers) => {
 	console.log("用户选择:", answers);
 	const spinner = ora();
 	const temporarilyDir = path.join(ROOT_DIR, answers.name);
-	const config = genarateConfig();
+	const config = genarateConfig({
+		answers,
+		root: temporarilyDir
+	});
 	// 调用插件
 	const { plugins } = await TaroPlugins({
 		root: temporarilyDir
@@ -32,7 +35,7 @@ export const cloneTemplate = async (answers: Answers) => {
 
 	const git = new Git(TEMPLATE_SRC, temporarilyDir, answers);
 
-	await cloneBranch(git, spinner, answers, config);
+	await cloneBranch(git, spinner, config);
 	plugins.forEach(async plugin => {
 		if (plugin.beforeBuild) await plugin.afterBuild();
 	});
@@ -41,17 +44,16 @@ export const cloneTemplate = async (answers: Answers) => {
 async function cloneBranch(
 	git: Git,
 	spinner: ora.Ora,
-	answers: Answers,
 	config: Config
 ) {
-	const genarate = new GenarateReact(config, answers);
+	const genarate = new GenarateReact(config);
 	spinner.start("正在克隆...");
 	try {
-		const targetPath = path.join(ROOT_DIR, `${answers.name}`); // 克隆到当前工作目录
+		const targetPath = path.join(ROOT_DIR, `${config.answers.name}`); // 克隆到当前工作目录
 
 		await git.clone(targetPath, ["--no-checkout"]);
 		const branchNames = await git.getBranches();
-		const branch = branchNames.filter(b => b === answers.template)[0];
+		const branch = branchNames.filter(b => b === config.answers.template)[0];
 
 		await git.ensureBranch(branch);
 		await genarateTemplate(genarate, spinner);

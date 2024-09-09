@@ -7,21 +7,20 @@ import reactPkg from "../../meta/react/pkg.json";
 import wxConfig from "../../meta/react/wxConfig.json";
 import settings from "../../meta/vscode/settings.json";
 import tsConfig from "../../meta/react/tsconfig.json";
-import { Answers } from "../../types/cli";
+import { format } from "prettier";
 import { Config } from "../../config";
+import { reactBabelConfig } from "../../meta/react/babel.config";
 
 export class GenarateReact extends Genarate {
 	constructor(
 		config: Config,
-		answer: Answers,
-		root: string = path.join(ROOT_DIR, answer.name)
 	) {
-		super(config, answer, root);
+		super(config);
 	}
 
 	async genaratePkg() {
-		const { name, description, author } = super.getAnswer();
-		const targetPKG = path.join(super.getRoot(), "package.json");
+		const { name, description, author } = super.getConfig().answers;
+		const targetPKG = path.join(super.getConfig().root, "package.json");
 		const pkg = reactPkg;
 		pkg.name = name;
 		pkg.description = description;
@@ -33,11 +32,12 @@ export class GenarateReact extends Genarate {
 		await this.genarateProjectConfig();
 		await this.genarateVscodeConfig();
 		await this.genarateTsConfig();
+		await this.genarateBabelConfig();
 	}
 	private async genarateProjectConfig() {
-		const { name, description } = super.getAnswer();
+		const { name, description } = super.getConfig().answers;
 		const targetConfig = path.join(
-			super.getRoot(),
+			super.getConfig().root,
 			PROJECT_CONFIG.WXCONFIG
 		);
 		const config = wxConfig;
@@ -47,12 +47,12 @@ export class GenarateReact extends Genarate {
 	}
 	private async genarateVscodeConfig() {
 		const targetConfig = path.join(
-			super.getRoot(),
+			super.getConfig().root,
 			".vscode/settings.json"
 		);
 		await fs.writeJson(targetConfig, settings, { spaces: 2 });
 		const targetCodeSnippets = path.join(
-			super.getRoot(),
+			super.getConfig().root,
 			".vscode/react.code-snippets"
 		);
 		await fs.writeJson(targetCodeSnippets, codeSnippets, {
@@ -60,7 +60,22 @@ export class GenarateReact extends Genarate {
 		});
 	}
 	private async genarateTsConfig() {
-		const targetConfig = path.join(super.getRoot(), "tsconfig.json");
+		const targetConfig = path.join(super.getConfig().root, "tsconfig.json");
 		await fs.writeJson(targetConfig, tsConfig, { spaces: 2 });
+	}
+	private async genarateBabelConfig() {
+		const targetConfig = path.join(
+			super.getConfig().root,
+			"babel.config.js"
+		);
+		const babelConfig = reactBabelConfig;
+		const babelText = await format(
+			`module.exports = ${JSON.stringify(babelConfig, null, 2)}`,
+			{
+				semi: false,
+				parser: "babel",
+			}
+		);
+		await fs.writeFile(targetConfig, babelText);
 	}
 }
