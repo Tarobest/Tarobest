@@ -7,6 +7,7 @@ import reactPkg from "../../meta/react/pkg.json";
 import wxConfig from "../../meta/react/wxConfig.json";
 import settings from "../../meta/vscode/settings.json";
 import tsConfig from "../../meta/react/tsconfig.json";
+import { format } from "prettier";
 import { Answers } from "../../types/cli";
 import { Config } from "../../config";
 
@@ -33,6 +34,7 @@ export class GenarateReact extends Genarate {
 		await this.genarateProjectConfig();
 		await this.genarateVscodeConfig();
 		await this.genarateTsConfig();
+		await this.genarateBabelConfig();
 	}
 	private async genarateProjectConfig() {
 		const { name, description } = super.getAnswer();
@@ -62,5 +64,30 @@ export class GenarateReact extends Genarate {
 	private async genarateTsConfig() {
 		const targetConfig = path.join(super.getRoot(), "tsconfig.json");
 		await fs.writeJson(targetConfig, tsConfig, { spaces: 2 });
+	}
+	private async genarateBabelConfig() {
+		const targetConfig = path.join(
+			super.getRoot(),
+			"babel.config.js"
+		);
+		const babelConfig = {
+			presets: [
+				[
+					"taro",
+					{
+						framework: "react",
+						ts: true
+					}
+				]
+			]
+		};
+		const babelText = await format(
+			`module.exports = ${JSON.stringify(babelConfig, null, 2)}`,
+			{
+				semi: false,
+				parser: "babel",
+			}
+		);
+		await fs.writeFile(targetConfig, babelText);
 	}
 }

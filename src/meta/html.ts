@@ -1,4 +1,5 @@
-<!doctype html>
+export const HTMLTemplate = ({ title }: { title: string }) => {
+	return `<!doctype html>
 <html>
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
@@ -8,7 +9,7 @@
     <meta name="format-detection" content="telephone=no,address=no" />
     <meta name="apple-mobile-web-app-status-bar-style" content="white" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>{{ answer.name }}</title>
+    <title>${title}</title>
     <script>
       <%= htmlWebpackPlugin.options.script %>
     </script>
@@ -16,4 +17,5 @@
   <body>
     <div id="app"></div>
   </body>
-</html>
+</html>`;
+};
