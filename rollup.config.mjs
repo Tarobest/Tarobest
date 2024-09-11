@@ -29,7 +29,8 @@ export default {
 	}, // 入口文件，根据你的项目结构调整
 	output: {
 		format: "cjs", // CommonJS 格式，适用于 Node.js
-		dir: "dist" // 输出目录
+		dir: "dist", // 输出目录
+		preserveModules: true, // 保留模块结构
 	},
 	plugins: [
 		json(),
@@ -37,6 +38,7 @@ export default {
 		resolve({
 			exportConditions: ["node"]
 		}),
+		
 		commonjs(), // 转换 CommonJS 模块
 		typescript({
 			// 用 TypeScript 编译 TypeScript 代码

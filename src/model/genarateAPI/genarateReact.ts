@@ -3,10 +3,10 @@ import path from "path";
 import { Genarate } from "../genarate";
 import { ROOT_DIR, PROJECT_CONFIG } from "../../constants";
 import codeSnippets from "../../meta/react/codeSnippets";
-import reactPkg from "../../meta/react/pkg.json";
+import reactPkg from "../../template/react/package.json";
 import wxConfig from "../../meta/react/wxConfig.json";
 import settings from "../../meta/vscode/settings.json";
-import tsConfig from "../../meta/react/tsconfig.json";
+import tsConfig from "../../template/react/tsconfig.json";
 import { format } from "prettier";
 import { Config } from "../../config";
 import { reactBabelConfig } from "../../meta/react/babel.config";
@@ -19,6 +19,7 @@ export class GenarateReact extends Genarate {
 	}
 
 	async genaratePkg() {
+		
 		const { name, description, author } = super.getConfig().answers;
 		const targetPKG = path.join(super.getConfig().root, "package.json");
 		const pkg = reactPkg;
