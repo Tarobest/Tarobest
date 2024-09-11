@@ -97,10 +97,15 @@ async function genarateHTML(
 	config: Config,
 	answer: Answers
 ) {
+	await fs.ensureDir(path.join(root, "src"));
 	const html = HTMLTemplate({
 		title: answer.name
 	});
-	await fs.writeFile(path.join(root, "index.html"), html, "utf-8");
+	await fs.writeFile(
+		path.join(root, "src", "index.html"),
+		html,
+		"utf-8"
+	);
 }
 
 async function genarateCommitlint(root: string, config: Config) {

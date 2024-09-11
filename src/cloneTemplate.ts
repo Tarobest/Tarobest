@@ -49,7 +49,7 @@ async function cloneBranch(
 	const genarate = new GenarateReact(config);
 	spinner.start("正在克隆...");
 	try {
-		const targetPath = path.join(ROOT_DIR, `${config.answers.name}`); // 克隆到当前工作目录
+		const targetPath = config.root; // 克隆到当前工作目录
 
 		await git.clone(targetPath, ["--no-checkout"]);
 		const branchNames = await git.getBranches();
