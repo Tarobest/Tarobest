@@ -1,8 +1,5 @@
 {
 	"compilerOptions": {
-    "jsx": "react",
-    "jsx": "react",
-    "jsx": "react",
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"strict": true,
@@ -14,6 +11,7 @@
 		"importHelpers": true,
 		"typeRoots": ["./node_modules/@types", "./types"],
 		"resolveJsonModule": true,
+		"jsx": "react",
 	},
 	"include": ["src/**/*"]
 }
