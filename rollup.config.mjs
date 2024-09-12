@@ -7,13 +7,14 @@ import del from "rollup-plugin-delete";
 import rollupBuildString from "./src/plugins/rollup/rollupBuildString.js";
 import copy from "rollup-plugin-copy";
 import { terser } from "rollup-plugin-terser";
+import ignoreBuildFile from "./ignoreBuildFile.js"
 import fs from "fs-extra";
 // import path from "path";
 const templates = fs.readdirSync("src/template");
 
 function resolveTemplateEntrys() {
 	const result = ["index.ts"]
-	const ignoreFile = ["package.json", "tsconfig.json", "pnpm-lock.yaml", ".husky", "node_modules", "types", "index.html", "assets"]
+	const ignoreFile = ignoreBuildFile
 
 	function dfsFile(dirs, path) {
 		for(let dir of dirs) {

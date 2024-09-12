@@ -1,6 +1,8 @@
+const ignoreBuildFile = require('../../../ignoreBuildFile');
+
 module.exports = function rollupBuildString() {
     let count = 0;
-    const ignoreFile = ["package.json", "tsconfig.json", "pnpm-lock.yaml", ".husky", "node_modules", "types", "index.html", "assets"]
+    const ignoreFile = ignoreBuildFile
 	return {
 		name: "rollup-plugin-build-string",
 		transform(code, id) {
