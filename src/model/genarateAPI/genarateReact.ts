@@ -8,12 +8,12 @@ import wxConfig from "../../meta/react/wxConfig.json";
 import settings from "../../meta/vscode/settings.json";
 import tsConfig from "../../template/react/tsconfig.json";
 import { format } from "prettier";
-import { Config } from "../../config";
+import { TConfig } from "../../config";
 import { reactBabelConfig } from "../../meta/react/babel.config";
 
 export class GenarateReact extends Genarate {
 	constructor(
-		config: Config,
+		config: TConfig,
 	) {
 		super(config);
 	}
@@ -28,7 +28,11 @@ export class GenarateReact extends Genarate {
 		pkg.author = author;
 		await fs.writeJson(targetPKG, pkg, { spaces: 2 });
 	}
-	async genaratePages() {}
+	async genaratePages() {
+		const files = await fs.readdir(path.join(__dirname, "../../template/react/src"));
+		console.log(files);
+		
+	}
 	async genarateConfig() {
 		await this.genarateProjectConfig();
 		await this.genarateVscodeConfig();

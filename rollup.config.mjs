@@ -3,6 +3,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import alias from "@rollup/plugin-alias";
+import rollupBuildString from './src/plugins/rollup/rollupBuildString.js'
 // import fs from "fs-extra";
 // import path from "path";
 
@@ -38,7 +39,7 @@ export default {
 		resolve({
 			exportConditions: ["node"]
 		}),
-		
+		rollupBuildString(),
 		commonjs(), // 转换 CommonJS 模块
 		typescript({
 			// 用 TypeScript 编译 TypeScript 代码
