@@ -29,7 +29,7 @@ export class GenarateReact extends Genarate {
 		await fs.writeJson(targetPKG, pkg, { spaces: 2 });
 	}
 	async genaratePages() {
-		const files = await fs.readdir(path.join(__dirname, "../../template/react/src"));
+		const files = await fs.readdir(path.join(__dirname, "../../template/react"));
 		console.log(files);
 		
 	}
