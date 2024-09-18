@@ -123,3 +123,7 @@ async function genarateStylelint(root: string, config: TConfig) {
 	});
 	await fs.writeFile(targetConfig, stylelintText);
 }
+// TODO: 生成assets
+async function genarateAssets(root: string, config: TConfig) {
+
+}

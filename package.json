@@ -38,7 +38,6 @@
 		"globals": "^15.9.0",
 		"prettier": "^3.3.3",
 		"rollup": "^4.21.0",
-		"rollup-plugin-copy": "^3.5.0",
 		"rollup-plugin-delete": "^2.1.0",
 		"rollup-plugin-terser": "^7.0.2",
 		"rollup-plugin-typescript2": "^0.36.0",
