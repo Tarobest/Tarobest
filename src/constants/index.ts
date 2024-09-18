@@ -9,7 +9,6 @@ export enum PROJECT_CONFIG {
 export const IGNORE_FILES = [
 	"package.json.js",
 	"tsconfig.json.js",
-	".husky",
 	"node_modules",
 	"types",
 	"index.html",

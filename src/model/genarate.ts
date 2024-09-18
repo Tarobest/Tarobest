@@ -27,11 +27,7 @@ export abstract class Genarate {
 		await genarateExtensions(this._config.root);
 		await genarateIgnore(this._config.root, this._config);
 		await genarateEnv(this._config.root, this._config);
-		await genarateHTML(
-			this._config.root,
-			this._config,
-			this._config.answers
-		);
+		await genarateHTML(this._config.root, this._config, this._config.answers);
 		await genarateCommitlint(this._config.root, this._config);
 		await genaratePrettier(this._config.root, this._config);
 		await genarateEsLint(this._config.root, this._config);
@@ -44,11 +40,7 @@ export abstract class Genarate {
 
 async function genarateExtensions(root: string) {
 	await fs.ensureDir(path.join(root, ".vscode"));
-	await fs.writeJSON(
-		path.join(root, ".vscode/extensions.json"),
-		extensions,
-		{ spaces: 2 }
-	);
+	await fs.writeJSON(path.join(root, ".vscode/extensions.json"), extensions, { spaces: 2 });
 }
 
 // 生成 .prettierignore 和 .gitignore , eslintignore
@@ -92,32 +84,21 @@ async function genarateEnv(root: string, config: TConfig) {
 	await fs.writeFile(path.join(root, ".env.production"), prodEnv);
 }
 
-async function genarateHTML(
-	root: string,
-	config: TConfig,
-	answer: Answers
-) {
+async function genarateHTML(root: string, config: TConfig, answer: Answers) {
 	await fs.ensureDir(path.join(root, "src"));
 	const html = HTMLTemplate({
 		title: answer.name
 	});
-	await fs.writeFile(
-		path.join(root, "src", "index.html"),
-		html,
-		"utf-8"
-	);
+	await fs.writeFile(path.join(root, "src", "index.html"), html, "utf-8");
 }
 
 async function genarateCommitlint(root: string, config: TConfig) {
 	const targetConfig = path.join(root, "commitlint.config.cjs");
 	const commitlint = commitlintConfig;
-	const commitlintText = await format(
-		`module.exports = ${JSON.stringify(commitlint, null, 2)}`,
-		{
-			semi: false,
-			parser: "babel"
-		}
-	);
+	const commitlintText = await format(`module.exports = ${JSON.stringify(commitlint, null, 2)}`, {
+		semi: false,
+		parser: "babel"
+	});
 	await fs.writeFile(targetConfig, commitlintText);
 }
 
@@ -136,12 +117,9 @@ async function genarateEsLint(root: string, config: TConfig) {
 async function genarateStylelint(root: string, config: TConfig) {
 	const targetConfig = path.join(root, ".stylelintrc.js");
 	const stylelint = stylelintConfig;
-	const stylelintText = await format(
-		`module.exports = ${JSON.stringify(stylelint, null, 2)}`,
-		{
-			semi: false,
-			parser: "babel"
-		}
-	);
+	const stylelintText = await format(`module.exports = ${JSON.stringify(stylelint, null, 2)}`, {
+		semi: false,
+		parser: "babel"
+	});
 	await fs.writeFile(targetConfig, stylelintText);
 }

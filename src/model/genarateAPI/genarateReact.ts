@@ -12,6 +12,7 @@ import { TConfig } from "../../config";
 import { IGNORE_FILES } from "../../constants";
 import { reactBabelConfig } from "../../meta/react/babel.config";
 import { matchOuterBrackets } from "../../utils/matchOuterBrackets";
+import { formatFileName } from "../../utils/formatFileName";
 
 export class GenarateReact extends Genarate {
 	constructor(config: TConfig) {
@@ -20,10 +21,7 @@ export class GenarateReact extends Genarate {
 
 	async genaratePkg() {
 		const { name, description, author } = super.getConfig().answers;
-		const targetPKG = path.join(
-			super.getConfig().root,
-			"package.json"
-		);
+		const targetPKG = path.join(super.getConfig().root, "package.json");
 		const pkg = reactPkg;
 		pkg.name = name;
 		pkg.description = description;
@@ -41,92 +39,53 @@ export class GenarateReact extends Genarate {
 		await this.genarateTsConfig();
 		await this.genarateBabelConfig();
 	}
-	private async genaratePagesByDfs(
-		dirPath: string,
-		root: string,
-		templateRoot: string
-	) {
+	private async genaratePagesByDfs(dirPath: string, root: string, templateRoot: string) {
 		const files = await fs.readdir(path.join(templateRoot, dirPath));
 		const dirs = files.filter(file => !IGNORE_FILES.includes(file));
-		console.log(dirs, dirPath);
-		
+
 		for (const dir of dirs) {
-			if (fs.statSync(path.join(templateRoot,dirPath, dir)).isDirectory()) {
+			if (fs.statSync(path.join(templateRoot, dirPath, dir)).isDirectory()) {
 				await fs.ensureDir(path.join(root, dirPath, dir));
-				await this.genaratePagesByDfs(
-					path.join(dirPath, dir),
-					root,
-					templateRoot
-				);
+				await this.genaratePagesByDfs(path.join(dirPath, dir), root, templateRoot);
 			} else {
-				const content = await fs.readFile(
-					path.join(templateRoot, dirPath, dir)
-				);
-				const result = matchOuterBrackets(content.toString())
-				if(result) {
-					
-					const fileContent = (JSON.parse(result) as string[]).join('\n');
-					let fileName = dir;
-					if(dir.endsWith('scss.js') || dir.endsWith('css.js') || dir.endsWith('less.js')) {
-						fileName = dir.replace(/.js/, '')
-					} else if(dir.endsWith('.config.js')) {
-						fileName = dir.replace(/.js/, '.ts')
-					}
-					 else if(dir.endsWith('.js') && (dir.includes('pages') || dir.includes('components'))) {
-						fileName = dir.replace(/.js/, '.tsx')
-					} else if(dir.endsWith('.js')) {
-						fileName = dir.replace(/.js/, '.ts')
-					}
-					await fs.writeFile(path.join(root, dirPath, fileName), fileContent)
+				const content = await fs.readFile(path.join(templateRoot, dirPath, dir));
+				const result = matchOuterBrackets(content.toString());
+
+				if (result) {
+					const fileContent = (JSON.parse(result) as string[]).join("\n");
+					let fileName = formatFileName(dirPath, dir);
+					await fs.writeFile(path.join(root, dirPath, fileName), fileContent);
 				}
 			}
 		}
 	}
 	private async genarateProjectConfig() {
 		const { name, description } = super.getConfig().answers;
-		const targetConfig = path.join(
-			super.getConfig().root,
-			PROJECT_CONFIG.WXCONFIG
-		);
+		const targetConfig = path.join(super.getConfig().root, PROJECT_CONFIG.WXCONFIG);
 		const config = wxConfig;
 		config.projectname = name;
 		config.description = description;
 		await fs.writeJson(targetConfig, config, { spaces: 2 });
 	}
 	private async genarateVscodeConfig() {
-		const targetConfig = path.join(
-			super.getConfig().root,
-			".vscode/settings.json"
-		);
+		const targetConfig = path.join(super.getConfig().root, ".vscode/settings.json");
 		await fs.writeJson(targetConfig, settings, { spaces: 2 });
-		const targetCodeSnippets = path.join(
-			super.getConfig().root,
-			".vscode/react.code-snippets"
-		);
+		const targetCodeSnippets = path.join(super.getConfig().root, ".vscode/react.code-snippets");
 		await fs.writeJson(targetCodeSnippets, codeSnippets, {
 			spaces: 2
 		});
 	}
 	private async genarateTsConfig() {
-		const targetConfig = path.join(
-			super.getConfig().root,
-			"tsconfig.json"
-		);
+		const targetConfig = path.join(super.getConfig().root, "tsconfig.json");
 		await fs.writeJson(targetConfig, tsConfig, { spaces: 2 });
 	}
 	private async genarateBabelConfig() {
-		const targetConfig = path.join(
-			super.getConfig().root,
-			"babel.config.js"
-		);
+		const targetConfig = path.join(super.getConfig().root, "babel.config.js");
 		const babelConfig = reactBabelConfig;
-		const babelText = await format(
-			`module.exports = ${JSON.stringify(babelConfig, null, 2)}`,
-			{
-				semi: false,
-				parser: "babel"
-			}
-		);
+		const babelText = await format(`module.exports = ${JSON.stringify(babelConfig, null, 2)}`, {
+			semi: false,
+			parser: "babel"
+		});
 		await fs.writeFile(targetConfig, babelText);
 	}
 }
