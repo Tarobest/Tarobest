@@ -23,10 +23,10 @@ answers,root
 }) => {
     const templateRoot = path.join(__dirname, "./template", answers.template)
     return {
-        platform: resolvePlatForm(),
-        answers: answers,
-        root: root,
-        templateRoot,
-        localTemplate
+        platform: resolvePlatForm(), // 平台
+        answers: answers,// 选择的模板
+        root: root,// 项目根目录
+        templateRoot,// 模版根目录
+        localTemplate // 本地模板
     } as TConfig
 }

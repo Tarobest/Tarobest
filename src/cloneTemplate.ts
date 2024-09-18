@@ -4,6 +4,7 @@ import {  TEMPLATE_SRC } from "./constants";
 import { print } from "./model/print";
 import { TConfig} from "./config";
 
+// 通过git clone 模板
 export const cloneTemplate = async (config: TConfig) => {
 	const {answers} = config;
 	const spinner = ora();

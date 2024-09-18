@@ -11,7 +11,7 @@ import ignoreBuildFile from "./ignoreBuildFile.js"
 import fs from "fs-extra";
 // import path from "path";
 const templates = fs.readdirSync("src/template");
-
+// 解析需要打包的文件入口
 function resolveTemplateEntrys() {
 	const result = ["index.ts"]
 	const ignoreFile = ignoreBuildFile
@@ -38,7 +38,7 @@ function resolveTemplateEntrys() {
 	
 	return result;
 }
-
+// 解析需要打包的静态文件
 function resolveCopyEntrys() {
     const copy = {
 		targets: []

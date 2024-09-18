@@ -1,3 +1,4 @@
+// 匹配最外层的中括号以及里面的内容
 export function matchOuterBrackets(input: string) {
 	let stack = [];
 	let result = "";

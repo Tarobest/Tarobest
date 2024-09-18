@@ -1,5 +1,5 @@
 const ignoreBuildFile = require('../../../ignoreBuildFile');
-
+// 将模版文件打包成字符串数组
 module.exports = function rollupBuildString() {
     let count = 0;
     const ignoreFile = ignoreBuildFile
