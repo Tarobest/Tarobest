@@ -1,3 +1,4 @@
+// 将js 文件还原成原本的后缀名
 export const formatFileName = (dirPath: string, fileName: string) => {
 	if (dirPath.includes(".husky")) {
 		return fileName.replace(/.js/, "");
