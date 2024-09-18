@@ -4,5 +4,5 @@ module.exports = [
 	"pnpm-lock.yaml",
 	"node_modules",
 	"types",
-	"index.html",
+	"index.html"
 ]

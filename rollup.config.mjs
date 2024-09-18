@@ -5,7 +5,7 @@ import json from "@rollup/plugin-json";
 import alias from "@rollup/plugin-alias";
 import del from "rollup-plugin-delete";
 import rollupBuildString from "./src/plugins/rollup/rollupBuildString.js";
-import copy from "rollup-plugin-copy";
+import copyAssets from "./src/plugins/rollup/copyAssets.js";
 import { terser } from "rollup-plugin-terser";
 import ignoreBuildFile from "./ignoreBuildFile.js"
 import fs from "fs-extra";
@@ -34,23 +34,24 @@ function resolveTemplateEntrys() {
 		const dirs = files.filter((file => !ignoreFile.includes(file)))
 		dfsFile(dirs, `src/template/${template}`)
 	});
-	console.log(result);
 	
 	return result;
 }
-// 解析需要打包的静态文件
-function resolveCopyEntrys() {
-    const copy = {
-		targets: []
-	}
-	for(let template of templates) {
-		copy.targets.push({
-			src: `src/template/${template}/assets/**/*`,
-			dest: `dist/template/${template}/assets`
-		})
-	}
-	return copy
-}
+// // 解析需要打包的静态文件
+// function resolveCopyEntrys() {
+//     const copy = {
+// 		targets: []
+// 	}
+// 	for(let template of templates) {
+// 		copy.targets.push({
+// 			src: `src/template/${template}/assets/**/*`,
+// 			dest: `dist/template/${template}/assets`
+// 		})
+// 	}
+// 	console.log(copy);
+	
+// 	return copy
+// }
 
 
 const isProd = process.env.NODE_ENV === "production";
@@ -62,8 +63,8 @@ const plugins = [
 	resolve({
 		exportConditions: ["node"]
 	}),
-	copy(resolveCopyEntrys()),
 	rollupBuildString(),
+	copyAssets(),
 	commonjs(), // 转换 CommonJS 模块
 	typescript({
 		// 用 TypeScript 编译 TypeScript 代码
