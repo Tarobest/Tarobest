@@ -12,6 +12,7 @@ import { TConfig } from "../../config";
 import { IGNORE_FILES } from "../../constants";
 import { reactBabelConfig } from "../../meta/react/babel.config";
 import { matchOuterBrackets } from "../../utils/matchOuterBrackets";
+import { formatFileName } from "../../utils/formatFileName";
 
 export class GenarateReact extends Genarate {
 	constructor(config: TConfig) {
@@ -52,21 +53,7 @@ export class GenarateReact extends Genarate {
 
 				if (result) {
 					const fileContent = (JSON.parse(result) as string[]).join("\n");
-					let fileName = dir;
-					if (dirPath.includes(".husky")) {
-						fileName = dir.replace(/.js/, "");
-					} else if (dir.endsWith("scss.js") || dir.endsWith("css.js") || dir.endsWith("less.js")) {
-						fileName = dir.replace(/.js/, "");
-					} else if (dir.endsWith(".config.js")) {
-						fileName = dir.replace(/.js/, ".ts");
-					} else if (
-						(dir.endsWith(".js") && dirPath.includes("pages")) ||
-						(dir.endsWith(".js") && dirPath.includes("components"))
-					) {
-						fileName = dir.replace(/.js/, ".tsx");
-					} else if (dir.endsWith(".js")) {
-						fileName = dir.replace(/.js/, ".ts");
-					}
+					let fileName = formatFileName(dirPath, dir);
 					await fs.writeFile(path.join(root, dirPath, fileName), fileContent);
 				}
 			}

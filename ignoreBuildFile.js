@@ -5,5 +5,4 @@ module.exports = [
 	"node_modules",
 	"types",
 	"index.html",
-	"assets"
 ]
