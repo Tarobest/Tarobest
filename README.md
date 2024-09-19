@@ -9,6 +9,18 @@ npm install -g tarobest
 tb init
 ```
 
+## 本地开发
+
+```bash
+git clone https://github.com/Tarobest/Tarobest.git
+cd Tarobest
+pnpm i
+pnpm run dev
+# 新建终端
+npm link
+tb init
+```
+
 ## TODO LIST
 
 - [ git 克隆第三方仓库 ]
