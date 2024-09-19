@@ -22,6 +22,7 @@ module.exports = function copyAssets() {
 						flag = false;
 						return prev;
 					});
+
 				// 产出一个包含在生成产物中的新文件，并返回一个 referenceId，可以在各种地方使用它来引用生成的文件。你可能会产出代码块、预构建的代码块或者资源文件。
 				this.emitFile({
 					type: "asset",
@@ -29,6 +30,23 @@ module.exports = function copyAssets() {
 					originalFileName: assetPath,
 					source: fs.readFileSync(assetPath)
 				});
+			});
+		},
+		closeBundle() {
+			assetPaths.forEach(assetPath => {
+                let flag = true;
+				const fileName = assetPath
+					.split("/")
+					.reverse()
+					.reduce((prev, cur) => {
+						if (cur !== "template" && flag) {
+							return path.join(cur, prev);
+						}
+						flag = false;
+						return prev;
+					});
+				// 删除多余js文件
+				fs.unlinkSync(path.join(process.cwd(), "dist/src/template", fileName + ".js"));
 			});
 		}
 	};

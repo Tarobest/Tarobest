@@ -32,6 +32,7 @@ export abstract class Genarate {
 		await genaratePrettier(this._config.root, this._config);
 		await genarateEsLint(this._config.root, this._config);
 		await genarateStylelint(this._config.root, this._config);
+		await genarateAssets(this._config.root, this._config);
 	}
 	abstract genaratePkg(): any;
 	abstract genaratePages(): any;
@@ -125,5 +126,8 @@ async function genarateStylelint(root: string, config: TConfig) {
 }
 // TODO: 生成assets
 async function genarateAssets(root: string, config: TConfig) {
-
+	const { templateRoot } = config;
+	const assetsRoot = path.join(templateRoot, "src/assets");
+	const targetAssetsRoot = path.join(root, "src/assets");
+	await fs.copy(assetsRoot, targetAssetsRoot);
 }
