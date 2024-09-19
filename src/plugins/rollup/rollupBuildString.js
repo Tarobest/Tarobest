@@ -1,11 +1,13 @@
+const ignoreBuildFile = require("../../../ignoreBuildFile")
+
 // 将模版文件打包成字符串数组
 module.exports = function rollupBuildString() {
-    let count = 0;
+
 	return {
 		name: "rollup-plugin-build-string",
 		transform(code, id) {
 
-			if(id.includes("src/template/") && !id.includes("assets")) {
+			if(id.includes("src/template/") && !id.includes("assets") && !ignoreBuildFile.includes(id.split("/").pop())) {
                 
                 return {
                     code: `export default ${JSON.stringify(code.split('\n'))}`,
