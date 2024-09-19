@@ -74,7 +74,7 @@ const plugins = [
 /** @type {import('rollup').RollupOptions} */
 // ---cut-end---
 export default args => {
-	if (args.configDebug === false) {
+	if (args.configDebug !== true) {
 		
 		plugins.push(terser());
 	}
