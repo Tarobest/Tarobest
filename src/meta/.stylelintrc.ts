@@ -11,15 +11,7 @@ export const stylelintConfig = {
 			customSyntax: "postcss-scss"
 		}
 	],
-	ignoreFiles: [
-		"**/*.js",
-		"**/*.ts",
-		"**/*.jsx",
-		"**/*.tsx",
-		"**/*.json",
-		"**/*.md",
-		"**/*.yaml"
-	],
+	ignoreFiles: ["**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx", "**/*.json", "**/*.md", "**/*.yaml"],
 	rules: {
 		"no-descending-specificity": null,
 		"selector-class-pattern": null,

@@ -7,34 +7,34 @@ import del from "rollup-plugin-delete";
 import rollupBuildString from "./src/plugins/rollup/rollupBuildString.js";
 import copyAssets from "./src/plugins/rollup/copyAssets.js";
 import { terser } from "rollup-plugin-terser";
-import ignoreBuildFile from "./ignoreBuildFile.js"
+import ignoreBuildFile from "./ignoreBuildFile.js";
 import fs from "fs-extra";
 // import path from "path";
 const templates = fs.readdirSync("src/template");
 // 解析需要打包的文件入口
 function resolveTemplateEntrys() {
-	const result = ["index.ts"]
-	const ignoreFile = ignoreBuildFile
+	const result = ["index.ts"];
+	const ignoreFile = ignoreBuildFile;
 
 	function dfsFile(dirs, path) {
-		for(let dir of dirs) {
+		for (let dir of dirs) {
 			// 是不是dir
-			if(fs.statSync(`${path}/${dir}`).isDirectory()) {
+			if (fs.statSync(`${path}/${dir}`).isDirectory()) {
 				const files = fs.readdirSync(`${path}/${dir}`);
-				const dirs = files.filter((file => !ignoreFile.includes(file)))
-				dfsFile(dirs, `${path}/${dir}`)
+				const dirs = files.filter(file => !ignoreFile.includes(file));
+				dfsFile(dirs, `${path}/${dir}`);
 			} else {
-				result.push(`${path}/${dir}`)
+				result.push(`${path}/${dir}`);
 			}
 		}
 	}
 
-	templates.forEach((template) => {
+	templates.forEach(template => {
 		const files = fs.readdirSync(`src/template/${template}`);
-		const dirs = files.filter((file => !ignoreFile.includes(file)))
-		dfsFile(dirs, `src/template/${template}`)
+		const dirs = files.filter(file => !ignoreFile.includes(file));
+		dfsFile(dirs, `src/template/${template}`);
 	});
-	
+
 	return result;
 }
 // // 解析需要打包的静态文件
@@ -49,12 +49,9 @@ function resolveTemplateEntrys() {
 // 		})
 // 	}
 // 	console.log(copy);
-	
+
 // 	return copy
 // }
-
-
-const isProd = process.env.NODE_ENV === "production";
 
 const plugins = [
 	json(),
@@ -73,23 +70,23 @@ const plugins = [
 	})
 ];
 
-if (isProd) {
-	plugins.push(terser());
-}
-
-
-
 // ---cut-start---
 /** @type {import('rollup').RollupOptions} */
 // ---cut-end---
-export default {
-	input: resolveTemplateEntrys(), // 入口文件，根据你的项目结构调整
-	// input: ["index.ts", "src/template/react/src/app.ts"],
-	output: {
-		format: "cjs", // CommonJS 格式，适用于 Node.js
-		dir: "dist", // 输出目录
-		preserveModules: true // 保留模块结构
-	},
-	plugins: plugins,
-	external: ["react"]
+export default args => {
+	if (args.configDebug === false) {
+		
+		plugins.push(terser());
+	}
+	return {
+		input: resolveTemplateEntrys(), // 入口文件，根据你的项目结构调整
+		// input: ["index.ts", "src/template/react/src/app.ts"],
+		output: {
+			format: "cjs", // CommonJS 格式，适用于 Node.js
+			dir: "dist", // 输出目录
+			preserveModules: true // 保留模块结构
+		},
+		plugins: plugins,
+		external: ["react"]
+	};
 };

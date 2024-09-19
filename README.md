@@ -1,14 +1,22 @@
 # Tarobest
 
-## 简介
+Tarobest 是一个的脚手架工具，它可以帮助你快速搭建一个 Taro 项目。
 
-Tarobest 是一个基于 Taro 框架的脚手架工具，它可以帮助你快速搭建一个 Taro 项目，并且提供了丰富的配置选项，让你可以自定义你的项目。
+## 用法
+
+```bash
+npm install -g tarobest
+tb init
+```
 
 ## TODO LIST
 
-- [ git 克隆自定义仓库 ]
+- [ git 克隆第三方仓库 ]
 - [ react-i18n 模版生成 ]
+- 保存本地模板
 - [ 别名配置 ]
 - [ cli 选项配置 ]
-- [ 删除打包的多余静态资源js文件 ]
-- [ ]
+- [ 开发体验优化 ]
+- [ vue 模版 ]
+- [ 通过vue cli等生成普通vue，react 模板 ]
+- 更多大饼...

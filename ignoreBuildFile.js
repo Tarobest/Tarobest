@@ -1,8 +1,1 @@
-module.exports = [
-	"package.json",
-	"tsconfig.json",
-	"pnpm-lock.yaml",
-	"node_modules",
-	"types",
-	"index.html"
-]
+module.exports = ["package.json", "tsconfig.json", "pnpm-lock.yaml", "node_modules", "types", "index.html"];
