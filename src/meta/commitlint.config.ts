@@ -5,19 +5,7 @@ export const commitlintConfig = {
 		"type-enum": [
 			2,
 			"always",
-			[
-				"feat",
-				"fix",
-				"docs",
-				"style",
-				"refactor",
-				"perf",
-				"test",
-				"build",
-				"cli",
-				"revert",
-				"chore"
-			]
+			["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "cli", "revert", "chore"]
 		]
 	}
 };

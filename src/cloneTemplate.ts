@@ -1,25 +1,21 @@
 import ora from "ora";
 import { Git } from "./model/git";
-import {  TEMPLATE_SRC } from "./constants";
+import { TEMPLATE_SRC } from "./constants";
 import { print } from "./model/print";
-import { TConfig} from "./config";
+import { TConfig } from "./config";
 
 // 通过git clone 模板
 export const cloneTemplate = async (config: TConfig) => {
-	const {answers} = config;
+	const { answers } = config;
 	const spinner = ora();
-	const temporarilyDir = config.root
+	const temporarilyDir = config.root;
 
 	const git = new Git(TEMPLATE_SRC, temporarilyDir, answers);
 
 	await cloneBranch(git, spinner, config);
 };
 // 克隆分支
-async function cloneBranch(
-	git: Git,
-	spinner: ora.Ora,
-	config: TConfig
-) {
+async function cloneBranch(git: Git, spinner: ora.Ora, config: TConfig) {
 	spinner.start("正在克隆...");
 	try {
 		const targetPath = config.root; // 克隆到当前工作目录
