@@ -131,3 +131,4 @@ async function genarateAssets(root: string, config: TConfig) {
 	const targetAssetsRoot = path.join(root, "src/assets");
 	await fs.copy(assetsRoot, targetAssetsRoot);
 }
+

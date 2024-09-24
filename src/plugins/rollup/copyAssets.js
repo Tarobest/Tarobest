@@ -34,7 +34,7 @@ module.exports = function copyAssets() {
 		},
 		closeBundle() {
 			assetPaths.forEach(assetPath => {
-                let flag = true;
+				let flag = true;
 				const fileName = assetPath
 					.split("/")
 					.reverse()
@@ -46,7 +46,8 @@ module.exports = function copyAssets() {
 						return prev;
 					});
 				// 删除多余js文件
-				fs.unlinkSync(path.join(process.cwd(), "dist/src/template", fileName + ".js"));
+				if (fs.existsSync(path.join(process.cwd(), "dist/src/template", fileName + ".js")))
+					fs.unlinkSync(path.join(process.cwd(), "dist/src/template", fileName + ".js"));
 			});
 		}
 	};

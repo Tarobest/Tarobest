@@ -7,6 +7,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "rollup --config --configDebug --watch",
 		"build": "rollup --config",
+		"dev:build": "rollup --config --watch",
 		"lint": "eslint .",
 		"format": "prettier --write ."
 	},
@@ -20,7 +21,8 @@
 		"inquirer": "^10.1.6",
 		"ora": "^5.4.1",
 		"simple-git": "^3.25.0",
-		"tslib": "^2.6.3"
+		"tslib": "^2.6.3",
+		"urlencode": "^2.0.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.8.0",

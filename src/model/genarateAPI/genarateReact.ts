@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
+import { decode } from "urlencode"
 import { Genarate } from "../genarate";
 import { PROJECT_CONFIG } from "../../constants";
 import codeSnippets from "../../meta/react/codeSnippets";
@@ -52,7 +53,8 @@ export class GenarateReact extends Genarate {
 				const result = matchOuterBrackets(content.toString());
 
 				if (result) {
-					const fileContent = (JSON.parse(result) as string[]).join("\n");
+					
+					const fileContent = decode(((JSON.parse(result)[0] as string)))
 					let fileName = formatFileName(dirPath, dir);
 					await fs.writeFile(path.join(root, dirPath, fileName), fileContent);
 				}
