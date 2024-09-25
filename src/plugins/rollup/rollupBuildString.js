@@ -28,7 +28,8 @@ module.exports = function rollupBuildString() {
 	return {
 		name: "rollup-plugin-build-string",
 		transform(code, id) {
-			if (id.includes("src/template/") && !ignoreBuildFile.includes(id.split("/").pop())) {
+			// 兼容不同系统
+			if (id.includes(path.join("src/template/")) && !ignoreBuildFile.includes(id.split(path.sep).pop())) {
 				return {
 					code: `export default ${JSON.stringify([urlencode.encode(code)])}`,
 					map: null // 如果需要sourcemap的话，需要配置
@@ -37,6 +38,8 @@ module.exports = function rollupBuildString() {
 			return null;
 		},
 		generateBundle() {
+			console.time("转换静态资源");
+
 			// 打包 assets 资源
 			const templates = fs.readdirSync(path.join(process.cwd(), "src/template"));
 			const paths = templates
@@ -48,7 +51,7 @@ module.exports = function rollupBuildString() {
 			assets.forEach(assetPath => {
 				let flag = true;
 				const fileName = assetPath
-					.split("/")
+					.split(path.sep)
 					.reverse()
 					.reduce((prev, cur) => {
 						if (cur !== "template" && flag) {
@@ -75,6 +78,7 @@ module.exports = function rollupBuildString() {
 					source: fs.readFileSync(path.join(huskyTarget, file))
 				});
 			});
+			console.timeEnd("转换静态资源");
 		}
 	};
 };
