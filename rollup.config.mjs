@@ -5,7 +5,6 @@ import json from "@rollup/plugin-json";
 import alias from "@rollup/plugin-alias";
 import del from "rollup-plugin-delete";
 import rollupBuildString from "./src/plugins/rollup/rollupBuildString.js";
-import copyAssets from "./src/plugins/rollup/copyAssets.js";
 import { terser } from "rollup-plugin-terser";
 import ignoreBuildFile from "./ignoreBuildFile.js";
 import fs from "fs-extra";
@@ -32,6 +31,7 @@ function resolveTemplateEntrys() {
 	templates.forEach(template => {
 		const files = fs.readdirSync(`src/template/${template}`);
 		const dirs = files.filter(file => !ignoreFile.includes(file));
+
 		dfsFile(dirs, `src/template/${template}`);
 	});
 
@@ -61,7 +61,6 @@ const plugins = [
 		exportConditions: ["node"]
 	}),
 	rollupBuildString(),
-	copyAssets(),
 	commonjs(), // 转换 CommonJS 模块
 	typescript({
 		// 用 TypeScript 编译 TypeScript 代码
@@ -75,7 +74,6 @@ const plugins = [
 // ---cut-end---
 export default args => {
 	if (args.configDebug !== true) {
-		
 		plugins.push(terser());
 	}
 	return {
