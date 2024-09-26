@@ -26,7 +26,7 @@
     "build:quickapp": "taro build --type quickapp",
     "build:harmony-hybrid": "taro build --type harmony-hybrid",
     "server": "node ./script/server.js",
-    "dev": "node ./script/buildConfig.js && npm run build:weapp -- --watch",
+    "dev": "node ./script/installDependencies.js && node ./script/buildConfig.js && npm run build:weapp -- --watch",
     "dev:swan": "npm run build:swan -- --watch",
     "dev:alipay": "npm run build:alipay -- --watch",
     "dev:tt": "npm run build:tt -- --watch",
