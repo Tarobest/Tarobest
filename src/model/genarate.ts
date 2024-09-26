@@ -13,6 +13,7 @@ import { stylelintConfig } from "../meta/.stylelintrc";
 import prettierConfig from "../meta/prettier.json";
 import eslintConfig from "../meta/eslint.json";
 import { format } from "prettier";
+import { print } from "./print";
 
 export abstract class Genarate {
 	private _config: TConfig;
@@ -24,15 +25,20 @@ export abstract class Genarate {
 		return this._config;
 	}
 	async ensureNormalFiles() {
-		await genarateExtensions(this._config.root);
-		await genarateIgnore(this._config.root, this._config);
-		await genarateEnv(this._config.root, this._config);
-		await genarateHTML(this._config.root, this._config, this._config.answers);
-		await genarateCommitlint(this._config.root, this._config);
-		await genaratePrettier(this._config.root, this._config);
-		await genarateEsLint(this._config.root, this._config);
-		await genarateStylelint(this._config.root, this._config);
-		await genarateAssets(this._config.root, this._config);
+		try {
+			await genarateExtensions(this._config.root);
+			await genarateIgnore(this._config.root, this._config);
+			await genarateEnv(this._config.root, this._config);
+			await genarateHTML(this._config.root, this._config, this._config.answers);
+			await genarateCommitlint(this._config.root, this._config);
+			await genaratePrettier(this._config.root, this._config);
+			await genarateEsLint(this._config.root, this._config);
+			await genarateStylelint(this._config.root, this._config);
+			await genarateAssets(this._config.root, this._config);
+			await genarateHusky(this._config.root, this._config);
+		} catch (e) {
+			print.red.error(`通用文件打包报错: ${e}`);
+		}
 	}
 	abstract genaratePkg(): any;
 	abstract genaratePages(): any;
@@ -124,7 +130,7 @@ async function genarateStylelint(root: string, config: TConfig) {
 	});
 	await fs.writeFile(targetConfig, stylelintText);
 }
-// TODO: 生成assets
+// 生成assets
 async function genarateAssets(root: string, config: TConfig) {
 	const { templateRoot } = config;
 	const assetsRoot = path.join(templateRoot, "src/assets");
@@ -132,3 +138,9 @@ async function genarateAssets(root: string, config: TConfig) {
 	await fs.copy(assetsRoot, targetAssetsRoot);
 }
 
+async function genarateHusky(root: string, config: TConfig) {
+	const { templateRoot } = config;
+	const huskyRoot = path.join(templateRoot, ".husky");
+	const targetHuskyRoot = path.join(root, ".husky");
+	await fs.copy(huskyRoot, targetHuskyRoot);
+}
