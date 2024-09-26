@@ -132,15 +132,15 @@ async function genarateStylelint(root: string, config: TConfig) {
 }
 // 生成assets
 async function genarateAssets(root: string, config: TConfig) {
-	const { templateRoot } = config;
-	const assetsRoot = path.join(templateRoot, "src/assets");
+	const { baseRoot } = config;
+	const assetsRoot = path.join(baseRoot, "src/assets");
 	const targetAssetsRoot = path.join(root, "src/assets");
 	await fs.copy(assetsRoot, targetAssetsRoot);
 }
 
 async function genarateHusky(root: string, config: TConfig) {
-	const { templateRoot } = config;
-	const huskyRoot = path.join(templateRoot, ".husky");
+	const { baseRoot } = config;
+	const huskyRoot = path.join(baseRoot, ".husky");
 	const targetHuskyRoot = path.join(root, ".husky");
 	await fs.copy(huskyRoot, targetHuskyRoot);
 }
