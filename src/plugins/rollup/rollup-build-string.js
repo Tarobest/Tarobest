@@ -2,7 +2,7 @@ const urlencode = require("urlencode");
 const fs = require("fs-extra");
 const path = require("path");
 
-const ignoreBuildFile = require("../../../ignoreBuildFile");
+const ignoreBuildFile = require("../../../ignore-build-file");
 
 const resolveAssets = paths => {
 	const result = [];

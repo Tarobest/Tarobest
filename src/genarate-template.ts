@@ -1,6 +1,6 @@
 import ora from "ora";
 import { TConfig } from "./config";
-import { GenarateReact } from "./model/genarateAPI/genarateReact";
+import { GenarateReact } from "./model/genarateAPI/genarate-react";
 import { Genarate } from "./model/genarate";
 import { print } from "./model/print";
 

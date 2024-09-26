@@ -1,8 +1,8 @@
 import "./index.scss";
 import React from 'react'
-import ReactLogo from "../../component/ReactLogo/ReactLogo";
+import ReactLogo from "../../components/ReactLogo/ReactLogo";
 import TarobestRouter from "../../utils/route/route";
-import Mybutton from "../../component/Button/Button";
+import Mybutton from "../../components/Button/Button";
 
 import { useLoad } from "@tarojs/taro";
 import { View } from "@tarojs/components";
