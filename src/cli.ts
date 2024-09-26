@@ -2,12 +2,12 @@ import { program } from "commander";
 import inquirer from "inquirer";
 import { SOURCE } from "./source";
 import { Answers } from "./types/cli";
-import { cloneTemplate } from "./cloneTemplate";
+import { cloneTemplate } from "./clone-template";
 import { ROOT_DIR } from "./constants";
 import path from "path";
 import TaroPlugins from "./plugins";
 import { genarateConfig } from "./config";
-import { genarateTemplate } from "./genarateTemplate";
+import { genarateTemplate } from "./genarate-template";
 import { print } from "./model/print";
 import fs from "fs-extra";
 

@@ -3,17 +3,17 @@ import path from "path";
 import { decode } from "urlencode";
 import { Genarate } from "../genarate";
 import { PROJECT_CONFIG } from "../../constants";
-import codeSnippets from "../../meta/react/codeSnippets";
+import codeSnippets from "../../meta/react/code-snippets";
 import reactPkg from "../../template/react/package.json";
-import wxConfig from "../../meta/react/wxConfig.json";
+import wxConfig from "../../meta/react/wx-config.json";
 import settings from "../../meta/vscode/settings.json";
 import tsConfig from "../../template/react/tsconfig.json";
 import { format } from "prettier";
 import { TConfig } from "../../config";
 import { IGNORE_FILES } from "../../constants";
 import { reactBabelConfig } from "../../meta/react/babel.config";
-import { matchOuterBrackets } from "../../utils/matchOuterBrackets";
-import { formatFileName } from "../../utils/formatFileName";
+import { matchOuterBrackets } from "../../utils/match-outer-brackets";
+import { formatFileName } from "../../utils/format-filename";
 
 export class GenarateReact extends Genarate {
 	constructor(config: TConfig) {

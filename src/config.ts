@@ -1,6 +1,6 @@
 import path from "path";
 import { Answers } from "./types/cli";
-import { resolvePlatForm } from "./utils/resolvePlatForm";
+import { resolvePlatForm } from "./utils/resolve-platForm";
 
 export interface TConfig {
 	platform: "macOS" | "Windows" | "Linux" | "other";

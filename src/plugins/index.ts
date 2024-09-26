@@ -1,4 +1,4 @@
-import { evaluateClone } from "./evaluateClone";
+import { evaluateClone } from "./evaluate-clone";
 
 export default async function (config: { root: string }) {
 	return {

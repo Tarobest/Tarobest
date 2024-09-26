@@ -6,7 +6,7 @@ import gitignore from "../meta/gitignore";
 import eslintignore from "../meta/eslintignore";
 import path from "path";
 import { TConfig } from "../config";
-import { resolveLineBreak } from "../utils/resolvePlatForm";
+import { resolveLineBreak } from "../utils/resolve-platForm";
 import { HTMLTemplate } from "../meta/html";
 import { commitlintConfig } from "../meta/commitlint.config";
 import { stylelintConfig } from "../meta/.stylelintrc";

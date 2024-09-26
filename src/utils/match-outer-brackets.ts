@@ -21,5 +21,5 @@ export function matchOuterBrackets(input: string) {
 			result += input[i];
 		}
 	}
-    return result;
+	return result;
 }
