@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
-import { decode } from "urlencode"
+import { decode } from "urlencode";
 import { Genarate } from "../genarate";
 import { PROJECT_CONFIG } from "../../constants";
 import codeSnippets from "../../meta/react/codeSnippets";
@@ -42,6 +42,7 @@ export class GenarateReact extends Genarate {
 	}
 	private async genaratePagesByDfs(dirPath: string, root: string, templateRoot: string) {
 		const files = await fs.readdir(path.join(templateRoot, dirPath));
+
 		const dirs = files.filter(file => !IGNORE_FILES.includes(file));
 
 		for (const dir of dirs) {
@@ -53,9 +54,9 @@ export class GenarateReact extends Genarate {
 				const result = matchOuterBrackets(content.toString());
 
 				if (result) {
-					
-					const fileContent = decode(((JSON.parse(result)[0] as string)))
+					const fileContent = decode(JSON.parse(result)[0] as string);
 					let fileName = formatFileName(dirPath, dir);
+
 					await fs.writeFile(path.join(root, dirPath, fileName), fileContent);
 				}
 			}
