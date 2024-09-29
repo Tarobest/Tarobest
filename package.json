@@ -9,7 +9,8 @@
 		"build": "rollup --config",
 		"dev:build": "rollup --config --watch",
 		"lint": "eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"each-install": "node ./scripts/installAll.js"
 	},
 	"keywords": [],
 	"author": "",
