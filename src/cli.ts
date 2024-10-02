@@ -10,6 +10,7 @@ import { genarateConfig } from "./config";
 import { genarateTemplate } from "./genarate-template";
 import { print } from "./model/print";
 import fs from "fs-extra";
+import { spawn } from "child_process";
 
 export function createCli() {
 	program.executableDir("../src/commands");
@@ -52,6 +53,33 @@ export function createCli() {
 		});
 	});
 
+	program.command("install").action(() => {
+		print.green.log("Begin install dependencies...");
+
+		const child = spawn("node", ["./src/utils/install-template-dependencies"], {
+			cwd: ROOT_DIR,
+			stdio: "pipe",
+			shell: true
+		});
+
+		child.stdout.on("data", data => {
+			process.stdout.write(data);
+		});
+
+		child.stderr.on("data", data => {
+			print.red.error(data.toString());
+		});
+
+		// 处理子进程退出
+		child.on("close", code => {
+			if (code !== 0) print.red.error(`Child process exited with code ${code}`);
+			else print.green.log("install all dependencies success");
+		});
+
+		child.on("error", err => {
+			print.red.error(`Open child process error: ${err}`);
+		});
+	});
 	program.parse(process.argv);
 	return program;
 }
