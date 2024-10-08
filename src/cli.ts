@@ -10,12 +10,12 @@ import { genarateConfig } from "./config";
 import { genarateTemplate } from "./genarate-template";
 import { print } from "./model/print";
 import fs from "fs-extra";
-import { spawn } from "child_process";
+import { exec } from "child_process";
 
 export function createCli() {
 	program.executableDir("../src/commands");
-
-	program.command("init").action(async () => {
+	// 创建项目
+	program.command("create").action(async () => {
 		const prompts = SOURCE;
 		inquirer.prompt(prompts as any).then(async answers => {
 			try {
@@ -52,33 +52,27 @@ export function createCli() {
 			}
 		});
 	});
-
+	// 开发环境安装依赖
 	program.command("install").action(() => {
 		print.green.log("Begin install dependencies...");
-
-		const child = spawn("node", ["./src/utils/install-template-dependencies"], {
-			cwd: ROOT_DIR,
-			stdio: "pipe",
-			shell: true
+		const templatePath = path.join(ROOT_DIR, "./src/template");
+		const templates = fs.readdirSync(templatePath);
+		const templateList = templates.map(template => {
+			return path.resolve(templatePath, template);
 		});
-
-		child.stdout.on("data", data => {
-			process.stdout.write(data);
-		});
-
-		child.stderr.on("data", data => {
-			print.red.error(data.toString());
-		});
-
-		// 处理子进程退出
-		child.on("close", code => {
-			if (code !== 0) print.red.error(`Child process exited with code ${code}`);
-			else print.green.log("install all dependencies success");
-		});
-
-		child.on("error", err => {
-			print.red.error(`Open child process error: ${err}`);
-		});
+		templateList.forEach(async templatePath => {
+			exec(`cd ${templatePath} && pnpm install`, (err, _stdout, stderr) => {
+				if (err) {
+					console.error(`exec error: ${err}`);
+					return;
+				}
+				if (stderr) {
+					console.error(`stderr: ${stderr}`);
+					return;
+				}
+				console.log(`install dependencies in ${templatePath} success`);
+			});
+		})
 	});
 	program.parse(process.argv);
 	return program;
