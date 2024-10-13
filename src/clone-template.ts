@@ -15,7 +15,7 @@ export const cloneTemplate = async (config: TConfig) => {
 	await cloneBranch(git, spinner, config);
 };
 // 克隆分支
-async function cloneBranch(git: Git, spinner: ora.Ora, config: TConfig) {
+async function cloneBranch (git: Git, spinner: ora.Ora, config: TConfig) {
 	spinner.start("正在克隆...");
 	try {
 		const targetPath = config.root; // 克隆到当前工作目录
@@ -27,6 +27,7 @@ async function cloneBranch(git: Git, spinner: ora.Ora, config: TConfig) {
 		await git.ensureBranch(branch);
 
 		spinner.stop();
+		print.green.log("创建完成");
 	} catch (error) {
 		print.red.error(`克隆失败: ${error}`);
 	} finally {
