@@ -14,6 +14,7 @@ import { IGNORE_FILES } from "../../constants";
 import { reactBabelConfig } from "../../meta/react/babel.config";
 import { matchOuterBrackets } from "../../utils/match-outer-brackets";
 import { formatFileName } from "../../utils/format-filename";
+import { filterByExtra } from "../../utils/filter-by-extra";
 
 export class GenarateReact extends Genarate {
 	constructor(config: TConfig) {
@@ -30,8 +31,9 @@ export class GenarateReact extends Genarate {
 		await fs.writeJson(targetPKG, pkg, { spaces: 2 });
 	}
 	async genaratePages() {
-		const { templateRoot, root } = super.getConfig();
+		const { templateRoot, root, baseRoot } = super.getConfig();
 		await this.genaratePagesByDfs(".", root, templateRoot);
+		await this.genaratePagesByDfs(".", root, baseRoot);
 	}
 
 	async genarateConfig() {
@@ -40,21 +42,33 @@ export class GenarateReact extends Genarate {
 		await this.genarateTsConfig();
 		await this.genarateBabelConfig();
 	}
+	/**
+	 *
+	 * @param dirPath 当前目录路径
+	 * @param root 目标根目录
+	 * @param templateRoot 模版目录
+	 */
 	private async genaratePagesByDfs(dirPath: string, root: string, templateRoot: string) {
 		const files = await fs.readdir(path.join(templateRoot, dirPath));
 
 		const dirs = files.filter(file => !IGNORE_FILES.includes(file));
 
 		for (const dir of dirs) {
+			// 是目录继续递归
 			if (fs.statSync(path.join(templateRoot, dirPath, dir)).isDirectory()) {
 				await fs.ensureDir(path.join(root, dirPath, dir));
 				await this.genaratePagesByDfs(path.join(dirPath, dir), root, templateRoot);
+				// 不是生成
 			} else {
 				const content = await fs.readFile(path.join(templateRoot, dirPath, dir));
+				// 匹配外层中括号获取文件内容
 				const result = matchOuterBrackets(content.toString());
 
 				if (result) {
-					const fileContent = decode(JSON.parse(result)[0] as string);
+					// 进行解码
+					let fileContent = decode(JSON.parse(result)[0] as string);
+					fileContent = filterByExtra(fileContent, this.getConfig().extra);
+					// 更改文件后缀名
 					let fileName = formatFileName(dirPath, dir);
 
 					await fs.writeFile(path.join(root, dirPath, fileName), fileContent);

@@ -11,11 +11,12 @@ import { genarateTemplate } from "./genarate-template";
 import { print } from "./model/print";
 import fs from "fs-extra";
 import { copyTemplate } from "./copy-template";
+import { exec } from "child_process";
 
 export function createCli() {
 	program.executableDir("../src/commands");
 	program
-		.command("init")
+		.command("create")
 		.option("--name <name>", "Specify the folder name")
 		.option("--description <description>", "describe the project")
 		.option("--author <author>", "the author of the project")
@@ -115,8 +116,28 @@ export function createCli() {
 		// 调用函数
 		writeAnswers();
 	});
-
-
+	// 开发环境安装依赖
+	program.command("install").action(() => {
+		print.green.log("Begin install dependencies...");
+		const templatePath = path.join(ROOT_DIR, "./src/template");
+		const templates = fs.readdirSync(templatePath);
+		const templateList = templates.map(template => {
+			return path.resolve(templatePath, template);
+		});
+		templateList.forEach(async templatePath => {
+			exec(`cd ${templatePath} && pnpm install`, (err, _stdout, stderr) => {
+				if (err) {
+					console.error(`exec error: ${err}`);
+					return;
+				}
+				if (stderr) {
+					console.error(`stderr: ${stderr}`);
+					return;
+				}
+				console.log(`install dependencies in ${templatePath} success`);
+			});
+		});
+	});
 	program.parse(process.argv);
 	return program;
 }

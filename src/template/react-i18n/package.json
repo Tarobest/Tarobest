@@ -1,0 +1,14 @@
+{
+  "name": "tarobest",
+  "version": "1.0.0",
+  "private": true,
+  "author": "",
+  "description": "",
+  "dependencies": {
+    "@tarojs/components": "^4.0.6",
+    "@tarojs/taro": "^4.0.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.0.0",
+    "react-i18next": "^14.1.3"
+  }
+}

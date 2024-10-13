@@ -12,7 +12,7 @@ Tarobest 是一个脚手架工具，提供快速生成代码的能力，内置�
 
 ```bash
 npm install -g tarobest
-tb init
+tb create
 ```
 
 ## 本地开发启动流程
@@ -21,13 +21,12 @@ tb init
 git clone https://github.com/Tarobest/Tarobest.git
 cd Tarobest
 pnpm i
-cd src/template/react
-pnpm i
 # 新建终端
 pnpm run dev
 # 新建终端
 npm link
-tb init
+tb install
+tb create
 ```
 
 ### 本地开发 Q&A
