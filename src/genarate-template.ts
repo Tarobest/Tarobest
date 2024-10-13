@@ -12,7 +12,7 @@ export const genarateTemplate = async (config: TConfig) => {
 	await genarateFiles(genarate, spinner);
 };
 
-async function genarateFiles(genarate: Genarate, spinner: ora.Ora) {
+async function genarateFiles (genarate: Genarate, spinner: ora.Ora) {
 	// 生成通用文件
 	await genarate.ensureNormalFiles();
 	// 生成pkg文件
@@ -22,5 +22,5 @@ async function genarateFiles(genarate: Genarate, spinner: ora.Ora) {
 	// 生成页面文件
 	await genarate.genaratePages();
 	spinner.stop();
-	print.green.log(`创建完成`);
+	print.green.log("创建完成");
 }

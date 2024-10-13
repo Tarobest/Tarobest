@@ -8,7 +8,7 @@ export class Git {
 	private _temporarilyDir: string; // 临时目录
 	private _git: SimpleGit;
 	// private _answer: Answers;
-	constructor(url: string, dir: string, answer: Answers) {
+	constructor (url: string, dir: string, answer: Answers) {
 		this._url = url;
 		this._temporarilyDir = dir;
 		this._git = simpleGit({
