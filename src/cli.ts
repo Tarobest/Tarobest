@@ -12,6 +12,8 @@ import { print } from "./model/print";
 import fs from "fs-extra";
 import { copyTemplate } from "./copy-template";
 import { exec } from "child_process";
+import {addTemplate} from "./addTemplate";
+import { deleteTemplate } from "./delTemplate";
 
 export function createCli() {
 	program.executableDir("../src/commands");
@@ -73,49 +75,20 @@ export function createCli() {
 			});
 		});
 
-	program.command("add <name> <templatePath>").action((name, templatePath) => {
-		const answers = { name: name, path: templatePath };
-		const filepath = path.join(__dirname, "data.json");
-		async function writeAnswers() {
-			try {
-				// 检查文件是否存在
-				const fileExists = await fs
-					.access(filepath)
-					.then(() => true)
-					.catch(() => false);
+	program
+		.command("add <name>")
+		.option("-t, --templatePath <path>", "path to the template", `${process.cwd()}`)
+		.action((name, options) => {
+			const answers = { name: name, path: options.templatePath };
+			// 调用函数
+			addTemplate(answers);
+		});
 
-				let jsonObject;
-				if (fileExists) {
-					// 文件存在，读取文件内容
-					const orgData = await fs.readFile(filepath, "utf8");
-					jsonObject = JSON.parse(orgData);
-				} else {
-					// 文件不存在，初始化为空对象
-					jsonObject = {};
-				}
-
-				// 确保 jsonObject 是一个对象
-				if (typeof jsonObject !== "object" || Array.isArray(jsonObject))
-					throw new Error("文件内容不是一个有效的 JSON 对象");
-
-				// 找到下一个键值
-				const maxKey = Math.max(...Object.keys(jsonObject).map(Number), 0) + 1;
-				const newKey = String(maxKey);
-
-				// 向对象中添加新对象
-				jsonObject[newKey] = answers;
-
-				// 将更新后的对象写回文件
-				await fs.writeFile(filepath, JSON.stringify(jsonObject, null, "\t"), "utf8");
-
-				print.green.log("添加成功");
-			} catch (error) {
-				console.error("Error writing to file:", error);
-			}
-		}
+	program.command("delete <name>").action(name => {
 		// 调用函数
-		writeAnswers();
+		deleteTemplate(name);
 	});
+
 	// 开发环境安装依赖
 	program.command("install").action(() => {
 		print.green.log("Begin install dependencies...");

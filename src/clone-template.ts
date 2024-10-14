@@ -9,10 +9,15 @@ export const cloneTemplate = async (config: TConfig) => {
 	const { answers } = config;
 	const spinner = ora();
 	const temporarilyDir = config.root;
-
-	const git = new Git(TEMPLATE_SRC, temporarilyDir, answers);
-
-	await cloneBranch(git, spinner, config);
+	const regex = /^(\w+)\((\w+)\)$/;
+	const match = regex.exec(answers.template);
+	if(match){
+		const git = new Git(match[2], temporarilyDir, answers);
+		await cloneBranch(git, spinner, config);
+	}else{
+		const git = new Git(TEMPLATE_SRC, temporarilyDir, answers);
+		await cloneBranch(git, spinner, config);
+	}
 };
 // 克隆分支
 async function cloneBranch (git: Git, spinner: ora.Ora, config: TConfig) {
