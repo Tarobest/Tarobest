@@ -34,7 +34,7 @@ export const genarateConfig = ({ answers, root }: { answers: Answers; root: stri
 		answers: answers, // 选择的模板
 		root: root, // 项目根目录
 		templateRoot, // 模版根目录
-		baseRoot: path.join(__dirname, "./template", baseRoot[answers.template]), // 基础模版目录
+		baseRoot:baseRoot[answers.template]?path.join(__dirname, "./template", baseRoot[answers.template]):"", // 基础模版目录
 		localTemplate, // 本地模板
 		extra
 	} as TConfig;

@@ -2,7 +2,6 @@ import { program } from "commander";
 import inquirer from "inquirer";
 import { SOURCE } from "./source";
 import { Answers } from "./types/cli";
-import { cloneTemplate } from "./clone-template";
 import { ROOT_DIR } from "./constants";
 import path from "path";
 import TaroPlugins from "./plugins";
@@ -10,10 +9,9 @@ import { genarateConfig } from "./config";
 import { genarateTemplate } from "./genarate-template";
 import { print } from "./model/print";
 import fs from "fs-extra";
-import { copyTemplate } from "./copy-template";
 import { exec } from "child_process";
-import {addTemplate} from "./addTemplate";
-import { deleteTemplate } from "./delTemplate";
+import {addTemplate,deleteTemplate,copyTemplate,cloneTemplate} from "./deal-template";
+
 
 export function createCli() {
 	program.executableDir("../src/commands");
@@ -36,6 +34,11 @@ export function createCli() {
 						...options,
 						...orgAnswers
 					};
+					const regex = /^(.+?)\((.+?)\)$/;
+					const match = regex.exec(answers.template);
+					if(match) answers.template = match[2];
+					console.log(answers);
+
 					const temporarilyDir = path.join(ROOT_DIR, answers.name);
 					const config = genarateConfig({
 						answers: answers as Answers,
@@ -56,10 +59,12 @@ export function createCli() {
 						if (plugin.beforeBuild) await plugin.beforeBuild();
 					});
 
-					const regex = /^(\w+)\((\w+)\)$/;
-					const match = regex.exec(answers.template);
+					
+					
 					if (match) {
-						if (fs.existsSync(match[2] as string)) await copyTemplate(match[2] as string, config.root);
+						const matchPath = match[2];
+						console.log(matchPath);
+						if (fs.existsSync(matchPath)) await copyTemplate(matchPath, config.root);
 						else await cloneTemplate(config);
 					} else {
 						if (config.localTemplate.includes(config.answers.template)) await genarateTemplate(config);

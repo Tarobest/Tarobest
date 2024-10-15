@@ -1,8 +1,5 @@
-import { Answers } from "./types/cli";
-//import { isLocalPath } from "./utils/match-pathType";
 import fs from "fs";
 import path from "path";
-import { print } from "./model/print";
 
 const dir = path.join(__dirname, "data.json");
 const tbTemplate = ["react", "react-i18n", "vue", "vue-i18n"];
