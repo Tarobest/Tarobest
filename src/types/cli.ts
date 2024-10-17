@@ -4,3 +4,7 @@ export interface Answers {
     description: string; // 项目描述
     author: string;// 作者
 }
+export interface AddAns {
+    name: string;
+    path: string;
+  }
